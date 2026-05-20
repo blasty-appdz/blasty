@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <input id="phone" value="+213657373461" />
+  <button onclick="sendOTP()">Envoyer OTP</button>
+  <p id="result"></p>
+  <script>
+    async function sendOTP() {
+      const phone = document.getElementById('phone').value.trim();
+      const res = await fetch('http://localhost:3001/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone })
+      });
+      const data = await res.json();
+      document.getElementById('result').innerText = JSON.stringify(data);
+    }
+  </script>
+</body>
+</html>

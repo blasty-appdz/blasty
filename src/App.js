@@ -21,11 +21,10 @@ const C = {
 };
 
 // ─── BRAND NAME — B toujours majuscule ───────────────────────────────────────
-const BRAND = "Blasty";   // ← B majuscule, partout, toujours
+const BRAND = "Blasty";
 
 // ─── CATÉGORIES (ordonnées par priorité) ─────────────────────────────────────
 const CATEGORIES = [
-  // PRIORITÉ 1 — Santé (besoin immédiat, récurrent)
   { id:"medecin",       label:"Médecin",           labelAr:"طبيب",            icon:"🩺", priority:1, group:"Santé & Médical" },
   { id:"dentiste",      label:"Dentiste",           labelAr:"طبيب أسنان",      icon:"🦷", priority:1, group:"Santé & Médical" },
   { id:"kine",          label:"Kiné",               labelAr:"معالج",           icon:"🦴", priority:1, group:"Santé & Médical" },
@@ -34,80 +33,67 @@ const CATEGORIES = [
   { id:"optique",       label:"Opticien",           labelAr:"بصري",            icon:"👁️", priority:1, group:"Santé & Médical" },
   { id:"veterinaire",   label:"Vétérinaire",        labelAr:"بيطري",           icon:"🐾", priority:1, group:"Santé & Médical" },
 
-  // PRIORITÉ 2 — Beauté & Coiffure (très fréquent en Algérie)
   { id:"coiffeur",      label:"Coiffeur",           labelAr:"حلاق",            icon:"💇", priority:2, group:"Beauté & Coiffure" },
   { id:"barbier",       label:"Barbier",            labelAr:"حلاق رجالي",      icon:"✂️", priority:2, group:"Beauté & Coiffure" },
   { id:"coloriste",     label:"Coloriste",          labelAr:"صبغة شعر",        icon:"🎨", priority:2, group:"Beauté & Coiffure" },
 
-  // PRIORITÉ 3 — Esthétique
   { id:"estheticienne", label:"Esthéticienne",      labelAr:"مختصة تجميل",     icon:"💅", priority:3, group:"Esthétique" },
   { id:"epilation",     label:"Épilation",          labelAr:"إزالة شعر",       icon:"🌸", priority:3, group:"Esthétique" },
   { id:"maquillage",    label:"Maquillage",         labelAr:"مكياج",           icon:"💄", priority:3, group:"Esthétique" },
   { id:"tatouage",      label:"Tatouage",           labelAr:"وشم",             icon:"🖊️", priority:3, group:"Esthétique" },
   { id:"sourcils",      label:"Sourcils & Cils",    labelAr:"رموش وحواجب",     icon:"👁️", priority:3, group:"Esthétique" },
 
-  // PRIORITÉ 4 — Esthétique Médicale
   { id:"dermato",       label:"Dermatologue",       labelAr:"جلدي",            icon:"🔬", priority:4, group:"Esthétique Médicale" },
   { id:"laser",         label:"Laser",              labelAr:"ليزر",            icon:"⚡", priority:4, group:"Esthétique Médicale" },
   { id:"botox",         label:"Botox / Fillers",    labelAr:"بوتوكس",          icon:"✨", priority:4, group:"Esthétique Médicale" },
 
-  // PRIORITÉ 5 — Bien-être & Soins
   { id:"massage",       label:"Massage",            labelAr:"مساج",            icon:"💆", priority:5, group:"Bien-être & Soins" },
   { id:"spa",           label:"Spa / Hammam",       labelAr:"سبا وحمام",       icon:"🛁", priority:5, group:"Bien-être & Soins" },
   { id:"yoga",          label:"Yoga",               labelAr:"يوغا",            icon:"🧘", priority:5, group:"Bien-être & Soins" },
   { id:"dietetique",    label:"Diététicien",        labelAr:"أخصائي تغذية",    icon:"🥗", priority:5, group:"Bien-être & Soins" },
   { id:"osteo",         label:"Ostéopathe",         labelAr:"معالج عظام",      icon:"🦷", priority:5, group:"Bien-être & Soins" },
 
-  // PRIORITÉ 6 — Sport & Fitness
   { id:"coach",         label:"Coach Sportif",      labelAr:"مدرب رياضي",      icon:"🏋️", priority:6, group:"Sport & Fitness" },
   { id:"sallesport",    label:"Salle de Sport",     labelAr:"نادي رياضي",      icon:"💪", priority:6, group:"Sport & Fitness" },
   { id:"piscine",       label:"Piscine",            labelAr:"مسبح",            icon:"🏊", priority:6, group:"Sport & Fitness" },
   { id:"tennis",        label:"Tennis / Padel",     labelAr:"تنس",             icon:"🎾", priority:6, group:"Sport & Fitness" },
   { id:"artsmartiaux",  label:"Arts Martiaux",      labelAr:"فنون قتالية",     icon:"🥋", priority:6, group:"Sport & Fitness" },
 
-  // PRIORITÉ 7 — Formation & Cours
   { id:"cours",         label:"Cours Particuliers", labelAr:"دروس خصوصية",     icon:"📚", priority:7, group:"Cours & Formation" },
   { id:"langues",       label:"Langues",            labelAr:"لغات",            icon:"🌍", priority:7, group:"Cours & Formation" },
   { id:"autoecole",     label:"Auto-École",         labelAr:"مدرسة قيادة",     icon:"🚗", priority:7, group:"Cours & Formation" },
   { id:"musique",       label:"Musique",            labelAr:"موسيقى",          icon:"🎵", priority:7, group:"Cours & Formation" },
   { id:"informatique",  label:"Informatique",       labelAr:"إعلام آلي",       icon:"💻", priority:7, group:"Cours & Formation" },
 
-  // PRIORITÉ 8 — Restauration
   { id:"restaurant",    label:"Restaurant",         labelAr:"مطعم",            icon:"🍽️", priority:8, group:"Restauration" },
   { id:"traiteur",      label:"Traiteur",           labelAr:"خدمة ضيافة",      icon:"👨‍🍳", priority:8, group:"Restauration" },
   { id:"cafe",          label:"Café / Salon de thé",labelAr:"مقهى",            icon:"☕", priority:8, group:"Restauration" },
 
-  // PRIORITÉ 9 — Événementiel
   { id:"photo",         label:"Photographe",        labelAr:"مصور",            icon:"📸", priority:9, group:"Événementiel" },
   { id:"dj",            label:"DJ / Musicien",      labelAr:"دي جي",           icon:"🎧", priority:9, group:"Événementiel" },
   { id:"sallefetes",    label:"Salle des Fêtes",    labelAr:"قاعة أفراح",      icon:"🎊", priority:9, group:"Événementiel" },
   { id:"decorateur",    label:"Décorateur",         labelAr:"مزيّن",           icon:"🌺", priority:9, group:"Événementiel" },
 
-  // PRIORITÉ 10 — Transport
   { id:"taxi",          label:"Taxi",               labelAr:"تاكسي",           icon:"🚕", priority:10, group:"Transport" },
   { id:"locationvoiture",label:"Location Voiture",  labelAr:"تأجير سيارة",     icon:"🚘", priority:10, group:"Transport" },
   { id:"transfert",     label:"Transfert Aéroport", labelAr:"نقل مطار",        icon:"✈️", priority:10, group:"Transport" },
 
-  // PRIORITÉ 11 — Hébergement
   { id:"hotel",         label:"Hôtel",              labelAr:"فندق",            icon:"🏨", priority:11, group:"Hébergement" },
   { id:"riad",          label:"Riad / Chalet",      labelAr:"رياض / شاليه",    icon:"🏡", priority:11, group:"Hébergement" },
   { id:"locationvac",   label:"Location Vacances",  labelAr:"إيجار عطلة",      icon:"🏖️", priority:11, group:"Hébergement" },
 
-  // PRIORITÉ 12 — Services à domicile
   { id:"plombier",      label:"Plombier",           labelAr:"سباك",            icon:"🔧", priority:12, group:"Services à domicile" },
   { id:"electricien",   label:"Électricien",        labelAr:"كهربائي",         icon:"⚡", priority:12, group:"Services à domicile" },
   { id:"clim",          label:"Climatisation",      labelAr:"تكييف",           icon:"❄️", priority:12, group:"Services à domicile" },
   { id:"nettoyage",     label:"Nettoyage",          labelAr:"تنظيف",           icon:"🧹", priority:12, group:"Services à domicile" },
   { id:"demenagement",  label:"Déménagement",       labelAr:"انتقال",          icon:"📦", priority:12, group:"Services à domicile" },
 
-  // PRIORITÉ 13 — Administratif & Juridique
   { id:"notaire",       label:"Notaire",            labelAr:"موثق",            icon:"📜", priority:13, group:"Administratif & Juridique" },
   { id:"avocat",        label:"Avocat",             labelAr:"محامي",           icon:"⚖️", priority:13, group:"Administratif & Juridique" },
   { id:"comptable",     label:"Comptable",          labelAr:"محاسب",           icon:"📊", priority:13, group:"Administratif & Juridique" },
   { id:"architecte",    label:"Architecte",         labelAr:"مهندس معماري",    icon:"🏗️", priority:13, group:"Administratif & Juridique" },
   { id:"traducteur",    label:"Traducteur",         labelAr:"مترجم",           icon:"🌐", priority:13, group:"Administratif & Juridique" },
 
-  // PRIORITÉ 14 — Animaux
   { id:"toilettage",    label:"Toilettage",         labelAr:"تجميل حيوانات",   icon:"🐩", priority:14, group:"Animaux" },
   { id:"petsitting",    label:"Pet-Sitting",        labelAr:"رعاية حيوانات",   icon:"🐾", priority:14, group:"Animaux" },
   { id:"dressage",      label:"Dressage",           labelAr:"تدريب حيوانات",   icon:"🐕", priority:14, group:"Animaux" },
@@ -139,6 +125,17 @@ const DAYS_FR = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
 const DAYS_AR = ["أحد","اثن","ثلا","أرب","خمي","جمع","سبت"];
 const CITIES  = ["Toutes villes","Alger","Oran","Constantine","Annaba","Tizi Ouzou","Sétif","Blida"];
 const TIME_SLOTS = ["09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
+
+// ─── CORRECTION 1 : date dynamique pour ProDashboard ─────────────────────────
+function getTodayLabel(isAr) {
+  const now = new Date();
+  const daysFR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+  const daysAR = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  const monthsFR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+  const monthsAR = ["يناير","فبراير","مارس","أبريل","ماي","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+  if (isAr) return `${daysAR[now.getDay()]} ${now.getDate()} ${monthsAR[now.getMonth()]} ${now.getFullYear()}`;
+  return `${daysFR[now.getDay()]} ${now.getDate()} ${monthsFR[now.getMonth()]} ${now.getFullYear()}`;
+}
 
 function getDates(isAr) {
   return Array.from({ length:7 }, (_,i) => {
@@ -184,9 +181,9 @@ const OutlineBtn = ({ children, onClick, style }) => (
   </button>
 );
 
-const StatusBadge = ({ status }) => (
+const StatusBadge = ({ status, isAr }) => (
   <div style={{ fontSize:11, fontWeight:800, padding:"5px 12px", borderRadius:20, background:status==="confirmed"?C.successBg:C.warnBg, color:status==="confirmed"?C.success:C.warn, whiteSpace:"nowrap" }}>
-    {status==="confirmed"?"✓ Confirmé":"⏳ Attente"}
+    {status==="confirmed"?(isAr?"✓ مؤكد":"✓ Confirmé"):(isAr?"⏳ انتظار":"⏳ Attente")}
   </div>
 );
 
@@ -202,7 +199,6 @@ function SplashScreen({ onGo }) {
       <div style={{ fontSize:15, color:"rgba(255,255,255,.8)", textAlign:"center", lineHeight:1.8, marginBottom:10 }}>
         Réservez en quelques secondes.
       </div>
-      {/* catégories preview pills */}
       <div style={{ display:"flex", flexWrap:"wrap", justifyContent:"center", gap:8, marginBottom:36, marginTop:6 }}>
         {["🩺 Santé","💇 Beauté","💅 Esthétique","💆 Bien-être","🍽️ Resto","🏨 Hôtel","🚕 Taxi","📸 Photo"].map(lb=>(
           <span key={lb} style={{ background:"rgba(255,255,255,.15)", color:C.white, borderRadius:20, padding:"5px 12px", fontSize:12, fontWeight:600, backdropFilter:"blur(4px)" }}>{lb}</span>
@@ -216,7 +212,8 @@ function SplashScreen({ onGo }) {
           Créer un compte
         </button>
       </div>
-      <div style={{ fontSize:12, color:"rgba(255,255,255,.5)", marginTop:24 }}>🇩🇿 Fait en Algérie avec ❤️ · {BRAND} v1.0</div>
+      {/* CORRECTION 2 : Oran au lieu de Alger */}
+      <div style={{ fontSize:12, color:"rgba(255,255,255,.5)", marginTop:24 }}>🇩🇿 Fait à Oran avec ❤️ · {BRAND} v1.0</div>
     </div>
   );
 }
@@ -326,7 +323,7 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
 
       {/* Stats */}
       <div style={{ display:"flex", background:C.white, margin:"16px 20px 0", borderRadius:18, overflow:"hidden", boxShadow:`0 2px 16px ${C.blueGlow}`, border:`1px solid ${C.border}` }}>
-        {[["1000+","Pros"],["14","Secteurs"],["4.8★","Note"]].map(([n,l],i)=>(
+        {[["1000+",isAr?"محترف":"Pros"],["14",isAr?"قطاع":"Secteurs"],["4.8★",isAr?"تقييم":"Note"]].map(([n,l],i)=>(
           <div key={l} style={{ flex:1, textAlign:"center", padding:"12px 8px", borderRight:i<2?`1px solid ${C.border}`:"none" }}>
             <div style={{ fontSize:16, fontWeight:900, color:C.blue }}>{n}</div>
             <div style={{ fontSize:11, color:C.muted, marginTop:1 }}>{l}</div>
@@ -334,18 +331,17 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
         ))}
       </div>
 
-      {/* Top categories (priority 1-5) */}
+      {/* Top categories */}
       <div style={{ padding:"18px 20px 0" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
           <div style={{ fontSize:16, fontWeight:800, color:C.dark }}>
             {isAr?"التخصصات":"Catégories populaires"}
           </div>
           <button onClick={()=>setShowCats(!showCats)} style={{ background:C.blueBg, color:C.blue, border:"none", borderRadius:20, padding:"5px 12px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
-            {showCats?(isAr?"أقل":"Moins"):(isAr?"كل":"Toutes")} →
+            {showCats?(isAr?"أقل":"Moins"):(isAr?"الكل":"Toutes")} →
           </button>
         </div>
 
-        {/* Quick cat pills */}
         <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:6 }}>
           <button onClick={clearFilters} style={{ background:!selCat&&!selGroup?C.blue:C.white, color:!selCat&&!selGroup?C.white:C.muted, border:`1.5px solid ${!selCat&&!selGroup?C.blue:C.border}`, borderRadius:20, padding:"7px 14px", fontSize:13, fontWeight:600, cursor:"pointer", whiteSpace:"nowrap" }}>
             {isAr?"الكل":"Tous"}
@@ -361,7 +357,7 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
         {showCats && (
           <div style={{ background:C.white, borderRadius:20, padding:18, marginTop:12, boxShadow:`0 4px 20px ${C.blueGlow}`, border:`1px solid ${C.border}` }}>
             <div style={{ fontSize:14, fontWeight:800, color:C.dark, marginBottom:14 }}>
-              {isAr?"جميع الخدمات":"Tous les services ({CATEGORIES.length}+)".replace("{CATEGORIES.length}",CATEGORIES.length)}
+              {isAr?`جميع الخدمات (${CATEGORIES.length}+)`:`Tous les services (${CATEGORIES.length}+)`}
             </div>
             {GROUPS.map(group=>(
               <div key={group} style={{ marginBottom:16 }}>
@@ -434,9 +430,9 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
         {filtered.length===0 && (
           <div style={{ textAlign:"center", padding:50, color:C.muted }}>
             <div style={{ fontSize:48 }}>🔍</div>
-            <div style={{ marginTop:12, fontSize:15, fontWeight:700 }}>Aucun résultat</div>
-            <div style={{ fontSize:13, marginTop:4 }}>Essayez une autre catégorie ou ville</div>
-            <button onClick={clearFilters} style={{ marginTop:16, background:C.blue, color:C.white, border:"none", borderRadius:12, padding:"10px 20px", fontFamily:"inherit", fontWeight:700, cursor:"pointer" }}>Réinitialiser</button>
+            <div style={{ marginTop:12, fontSize:15, fontWeight:700 }}>{isAr?"لا توجد نتائج":"Aucun résultat"}</div>
+            <div style={{ fontSize:13, marginTop:4 }}>{isAr?"جرب فئة أو مدينة أخرى":"Essayez une autre catégorie ou ville"}</div>
+            <button onClick={clearFilters} style={{ marginTop:16, background:C.blue, color:C.white, border:"none", borderRadius:12, padding:"10px 20px", fontFamily:"inherit", fontWeight:700, cursor:"pointer" }}>{isAr?"إعادة ضبط":"Réinitialiser"}</button>
           </div>
         )}
       </div>
@@ -469,7 +465,7 @@ function BookingScreen({ pro, isAr, onBack, onConfirm }) {
         <div style={{ fontSize:21, fontWeight:900, color:C.white, textAlign:"center" }}>{isAr?pro.nameAr:pro.name}</div>
         <div style={{ fontSize:13, color:"rgba(255,255,255,.8)", textAlign:"center", marginTop:4 }}>{cat.icon} {isAr?cat.labelAr:cat.label} · {pro.spec} · {pro.city}</div>
         <div style={{ display:"flex", justifyContent:"center", gap:20, marginTop:14 }}>
-          {[[`⭐ ${pro.rating}`,"Note"],[`👥 ${pro.reviews}`,"Avis"],[`💰 ${pro.price}`,"Tarif"]].map(([v,l])=>(
+          {[[`⭐ ${pro.rating}`,isAr?"تقييم":"Note"],[`👥 ${pro.reviews}`,isAr?"تعليق":"Avis"],[`💰 ${pro.price}`,isAr?"السعر":"Tarif"]].map(([v,l])=>(
             <div key={l} style={{ textAlign:"center", color:C.white }}>
               <div style={{ fontSize:15, fontWeight:900 }}>{v}</div>
               <div style={{ fontSize:11, opacity:.75 }}>{l}</div>
@@ -515,13 +511,13 @@ function BookingScreen({ pro, isAr, onBack, onConfirm }) {
             </Card>
             <Card style={{ background:C.blueBg, border:`1.5px solid ${C.border}` }}>
               <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>{isAr?"ملخص الحجز":"Récapitulatif"}</div>
-              {[[isAr?"الخدمة":"Service",`${cat.icon} ${isAr?cat.labelAr:cat.label}`],[isAr?"المهني":"Professionnel",isAr?pro.nameAr:pro.name],["Date",date.full],["Heure",time],["Prix",pro.price]].map(([k,v])=>(
+              {[[isAr?"الخدمة":"Service",`${cat.icon} ${isAr?cat.labelAr:cat.label}`],[isAr?"المهني":"Professionnel",isAr?pro.nameAr:pro.name],[isAr?"التاريخ":"Date",date.full],[isAr?"الوقت":"Heure",time],[isAr?"السعر":"Prix",pro.price]].map(([k,v])=>(
                 <div key={k} style={{ display:"flex", justifyContent:"space-between", fontSize:14, marginBottom:10 }}>
                   <span style={{ color:C.muted }}>{k}</span>
                   <span style={{ fontWeight:700, color:C.dark }}>{v}</span>
                 </div>
               ))}
-              <PrimaryBtn onClick={confirm} disabled={loading} style={{ marginTop:8 }}>{loading?"⏳ Confirmation...":isAr?"✓ تأكيد الحجز":"✓ Confirmer le RDV"}</PrimaryBtn>
+              <PrimaryBtn onClick={confirm} disabled={loading} style={{ marginTop:8 }}>{loading?(isAr?"⏳ جاري التأكيد...":"⏳ Confirmation..."):isAr?"✓ تأكيد الحجز":"✓ Confirmer le RDV"}</PrimaryBtn>
             </Card>
           </>
         )}
@@ -543,7 +539,7 @@ function SuccessScreen({ booking, isAr, onHome }) {
         📱 {isAr?`ستصلك رسالة SMS من ${BRAND}`:`Un SMS ${BRAND} vous sera envoyé`}
       </div>
       <Card style={{ width:"100%", marginBottom:24 }}>
-        {[[`${cat.icon} Service`,isAr?cat.labelAr:cat.label],[`${booking.pro.img} Pro`,isAr?booking.pro.nameAr:booking.pro.name],["📅 Date",booking.date.full],["⏰ Heure",booking.time],["💰 Prix",booking.pro.price]].map(([k,v])=>(
+        {[[`${cat.icon} ${isAr?"الخدمة":"Service"}`,isAr?cat.labelAr:cat.label],[`${booking.pro.img} ${isAr?"المهني":"Pro"}`,isAr?booking.pro.nameAr:booking.pro.name],[`📅 ${isAr?"التاريخ":"Date"}`,booking.date.full],[`⏰ ${isAr?"الوقت":"Heure"}`,booking.time],[`💰 ${isAr?"السعر":"Prix"}`,booking.pro.price]].map(([k,v])=>(
           <div key={k} style={{ display:"flex", justifyContent:"space-between", fontSize:14, marginBottom:8 }}>
             <span style={{ color:C.muted }}>{k}</span><span style={{ fontWeight:700, color:C.dark }}>{v}</span>
           </div>
@@ -581,7 +577,8 @@ function MyBookingsScreen({ isAr, bookings }) {
                   <div style={{ fontSize:12, color:C.muted, marginTop:1 }}>{cat.icon} {isAr?cat.labelAr:cat.label} · {b.pro.city}</div>
                   <div style={{ fontSize:13, color:C.blue, fontWeight:700, marginTop:4 }}>📅 {b.date} · ⏰ {b.time}</div>
                 </div>
-                <StatusBadge status={b.status} />
+                {/* CORRECTION 3 : isAr passé à StatusBadge */}
+                <StatusBadge status={b.status} isAr={isAr} />
               </div>
             </Card>
           );
@@ -594,22 +591,29 @@ function MyBookingsScreen({ isAr, bookings }) {
 // ─── PRO DASHBOARD ────────────────────────────────────────────────────────────
 function ProDashboard({ user, isAr }) {
   const rdvs=[
-    { time:"09:00", client:"Yasmine Bouali", type:"Coupe femme",   status:"confirmed" },
-    { time:"10:30", client:"Riad Meziane",   type:"Coupe + barbe", status:"confirmed" },
-    { time:"11:30", client:"Fatima Cherif",  type:"Coloration",    status:"pending"   },
-    { time:"14:00", client:"Omar Benali",    type:"Coupe homme",   status:"confirmed" },
-    { time:"15:30", client:"Nadia Haddad",   type:"Soin kératine", status:"pending"   },
+    { time:"09:00", client:"Yasmine Bouali", clientAr:"ياسمين بوعلي",  type:"Coupe femme",   typeAr:"قصة نسائية",   status:"confirmed" },
+    { time:"10:30", client:"Riad Meziane",   clientAr:"رياض مزيان",    type:"Coupe + barbe", typeAr:"قصة + لحية",   status:"confirmed" },
+    { time:"11:30", client:"Fatima Cherif",  clientAr:"فاطمة شريف",    type:"Coloration",    typeAr:"صبغة",          status:"pending"   },
+    { time:"14:00", client:"Omar Benali",    clientAr:"عمر بن علي",    type:"Coupe homme",   typeAr:"قصة رجالية",   status:"confirmed" },
+    { time:"15:30", client:"Nadia Haddad",   clientAr:"نادية حداد",    type:"Soin kératine", typeAr:"علاج كيراتين",  status:"pending"   },
   ];
-  const stats=[["12","RDV aujourd'hui",C.blue],["84","Clients",C.success],["42k","Revenus DA","#9B59B6"],["+3","Nouvelles résas",C.warn]];
+  // CORRECTION 1 : stats bilingues
+  const stats=[
+    ["12", isAr?"مواعيد اليوم":"RDV aujourd'hui", C.blue],
+    ["84", isAr?"عملاء":"Clients",                 C.success],
+    ["42k",isAr?"دخل DA":"Revenus DA",             "#9B59B6"],
+    ["+3", isAr?"حجوزات جديدة":"+3 Nouvelles résas", C.warn],
+  ];
+
   return (
     <div style={{ paddingBottom:90 }}>
       <div style={{ background:`linear-gradient(155deg,${C.blue},${C.blueDeep})`, padding:"52px 20px 24px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-30, right:-30, width:140, height:140, borderRadius:"50%", background:"rgba(255,255,255,.06)" }} />
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
           <div>
-            <div style={{ fontSize:13, color:"rgba(255,255,255,.7)", fontWeight:600 }}>Bonjour 👋</div>
+            <div style={{ fontSize:13, color:"rgba(255,255,255,.7)", fontWeight:600 }}>{isAr?"مرحباً 👋":"Bonjour 👋"}</div>
             <div style={{ fontSize:24, fontWeight:900, color:C.white, marginTop:2 }}>{user.name}</div>
-            <div style={{ fontSize:14, color:"rgba(255,255,255,.8)" }}>Tableau de bord {BRAND}</div>
+            <div style={{ fontSize:14, color:"rgba(255,255,255,.8)" }}>{isAr?`لوحة تحكم ${BRAND}`:`Tableau de bord ${BRAND}`}</div>
           </div>
           <div style={{ width:54, height:54, borderRadius:16, background:"rgba(255,255,255,.18)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:28 }}>💼</div>
         </div>
@@ -624,23 +628,24 @@ function ProDashboard({ user, isAr }) {
         <div style={{ position:"absolute", bottom:-2, left:0, right:0, height:30, background:C.bg, borderRadius:"50% 50% 0 0 / 20px 20px 0 0" }} />
       </div>
       <div style={{ padding:"20px 20px" }}>
-        <div style={{ fontSize:16, fontWeight:800, color:C.dark, marginBottom:4 }}>Rendez-vous du jour</div>
-        <div style={{ fontSize:13, color:C.muted, marginBottom:14 }}>Samedi 18 Avril 2026</div>
+        <div style={{ fontSize:16, fontWeight:800, color:C.dark, marginBottom:4 }}>{isAr?"مواعيد اليوم":"Rendez-vous du jour"}</div>
+        {/* CORRECTION 1 : date dynamique */}
+        <div style={{ fontSize:13, color:C.muted, marginBottom:14 }}>{getTodayLabel(isAr)}</div>
         {rdvs.map((r,i)=>(
           <Card key={i} style={{ padding:"14px 16px" }}>
             <div style={{ display:"flex", alignItems:"center", gap:12 }}>
               <div style={{ width:52, height:52, borderRadius:14, background:C.blueBg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:900, color:C.blue, textAlign:"center", lineHeight:1.2, flexShrink:0 }}>{r.time}</div>
               <div style={{ flex:1 }}>
-                <div style={{ fontSize:14, fontWeight:800, color:C.dark }}>{r.client}</div>
-                <div style={{ fontSize:13, color:C.muted, marginTop:2 }}>{r.type}</div>
+                <div style={{ fontSize:14, fontWeight:800, color:C.dark }}>{isAr?r.clientAr:r.client}</div>
+                <div style={{ fontSize:13, color:C.muted, marginTop:2 }}>{isAr?r.typeAr:r.type}</div>
               </div>
-              <StatusBadge status={r.status} />
+              <StatusBadge status={r.status} isAr={isAr} />
             </div>
           </Card>
         ))}
-        <div style={{ fontSize:16, fontWeight:800, color:C.dark, margin:"20px 0 14px" }}>Actions rapides</div>
+        <div style={{ fontSize:16, fontWeight:800, color:C.dark, margin:"20px 0 14px" }}>{isAr?"إجراءات سريعة":"Actions rapides"}</div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-          {[["➕","Nouveau RDV"],["📊","Statistiques"],["⚙️","Paramètres"],["💬","Messages"]].map(([ic,lb])=>(
+          {[["➕",isAr?"موعد جديد":"Nouveau RDV"],["📊",isAr?"إحصائيات":"Statistiques"],["⚙️",isAr?"إعدادات":"Paramètres"],["💬",isAr?"رسائل":"Messages"]].map(([ic,lb])=>(
             <button key={lb} style={{ background:C.white, border:`1.5px solid ${C.border}`, borderRadius:18, padding:"18px 14px", cursor:"pointer", fontFamily:"inherit", display:"flex", flexDirection:"column", alignItems:"center", gap:8 }}>
               <span style={{ fontSize:28 }}>{ic}</span>
               <span style={{ fontSize:13, fontWeight:700, color:C.dark }}>{lb}</span>
@@ -654,7 +659,16 @@ function ProDashboard({ user, isAr }) {
 
 // ─── PROFILE ──────────────────────────────────────────────────────────────────
 function ProfileScreen({ user, isAr, onLogout }) {
-  const items=[["👤","Informations personnelles"],["🔔","Notifications"],["🔒","Sécurité"],["🌍","Langue & région"],["⭐","Mes avis"],["❓","Aide & support"],["📜","CGU"]];
+  // CORRECTION 4 : menu items bilingues
+  const items=[
+    ["👤", isAr?"المعلومات الشخصية":"Informations personnelles"],
+    ["🔔", isAr?"الإشعارات":"Notifications"],
+    ["🔒", isAr?"الأمان":"Sécurité"],
+    ["🌍", isAr?"اللغة والمنطقة":"Langue & région"],
+    ["⭐", isAr?"تقييماتي":"Mes avis"],
+    ["❓", isAr?"المساعدة":"Aide & support"],
+    ["📜", isAr?"الشروط العامة":"CGU"],
+  ];
   return (
     <div style={{ paddingBottom:90 }}>
       <GradHeader>
@@ -663,7 +677,7 @@ function ProfileScreen({ user, isAr, onLogout }) {
         <div style={{ fontSize:14, color:"rgba(255,255,255,.75)", textAlign:"center", marginTop:4 }}>{user.phone}</div>
         <div style={{ display:"flex", justifyContent:"center", marginTop:12 }}>
           <span style={{ background:"rgba(255,255,255,.2)", color:C.white, borderRadius:20, padding:"5px 16px", fontSize:12, fontWeight:700 }}>
-            {user.role==="client"?"👤 Client":"💼 Professionnel"}
+            {user.role==="client"?(isAr?"👤 عميل":"👤 Client"):(isAr?"💼 محترف":"💼 Professionnel")}
           </span>
         </div>
       </GradHeader>
@@ -678,7 +692,8 @@ function ProfileScreen({ user, isAr, onLogout }) {
           ))}
         </Card>
         <OutlineBtn onClick={onLogout} style={{ marginTop:20 }}>🚪 {isAr?"تسجيل الخروج":"Se déconnecter"}</OutlineBtn>
-        <div style={{ textAlign:"center", marginTop:16, fontSize:12, color:C.muted }}>{BRAND} v1.0.0 · 🇩🇿 Alger, Algérie</div>
+        {/* CORRECTION 2 : Oran au lieu de Alger */}
+        <div style={{ textAlign:"center", marginTop:16, fontSize:12, color:C.muted }}>{BRAND} v1.0.0 · 🇩🇿 Oran, Algérie</div>
       </div>
     </div>
   );
@@ -703,8 +718,8 @@ export default function App() {
   const handleLogout  = ()  => { setUser(null); setScreen("splash"); };
 
   const NAV = user?.role==="professionnel"
-    ? [["home","🏠","Accueil","الرئيسية"],["pro","📊","Dashboard","داشبورد"],["profile","👤","Profil","حساب"]]
-    : [["home","🏠","Accueil","الرئيسية"],["myrdv","📅","Mes RDV","مواعيدي"],["profile","👤","Profil","حساب"]];
+    ? [["home","🏠",isAr?"الرئيسية":"Accueil"],["pro","📊",isAr?"داشبورد":"Dashboard"],["profile","👤",isAr?"حساب":"Profil"]]
+    : [["home","🏠",isAr?"الرئيسية":"Accueil"],["myrdv","📅",isAr?"مواعيدي":"Mes RDV"],["profile","👤",isAr?"حساب":"Profil"]];
 
   const fonts = <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet" />;
 
@@ -725,10 +740,10 @@ export default function App() {
 
       {appPage!=="booking" && appPage!=="success" && (
         <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:430, background:C.white, borderTop:`1px solid ${C.border}`, display:"flex", justifyContent:"space-around", padding:"10px 0 20px", zIndex:200, boxShadow:`0 -4px 20px rgba(26,110,255,.08)` }}>
-          {NAV.map(([id,ic,lb,lbAr])=>(
+          {NAV.map(([id,ic,lb])=>(
             <div key={id} onClick={()=>setAppPage(id)} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:3, cursor:"pointer", color:appPage===id?C.blue:C.muted, fontSize:10, fontWeight:appPage===id?800:400, transition:"all .15s" }}>
               <span style={{ fontSize:22 }}>{ic}</span>
-              <span>{isAr?lbAr:lb}</span>
+              <span>{lb}</span>
               {appPage===id && <div style={{ width:5, height:5, borderRadius:"50%", background:C.blue }} />}
             </div>
           ))}
