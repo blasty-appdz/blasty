@@ -16,47 +16,26 @@
 }
 body{font-family:'Sora',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;}
 .ar{font-family:'Tajawal',sans-serif;direction:rtl;}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;
-  background:rgba(255,255,255,.93);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;padding:12px 28px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:12px 28px;}
 .nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
-.nav-logo-icon{width:36px;height:36px;border-radius:10px;
-  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
-  display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));display:flex;align-items:center;justify-content:center;font-size:18px;}
 .nav-logo-text{font-size:22px;font-weight:900;color:var(--blue);letter-spacing:-.5px;}
 .nav-links{display:flex;align-items:center;gap:6px;}
 .nav-link{color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;padding:6px 12px;border-radius:10px;transition:.2s;}
 .nav-link:hover{color:var(--blue);background:var(--blue-bg);}
 .nav-link .ar{font-size:11px;display:block;color:var(--muted);opacity:.7;}
-.btn-nav{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;
-  border:none;border-radius:12px;padding:9px 18px;font-size:13px;font-weight:800;
-  cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;line-height:1.4;}
+.btn-nav{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;border-radius:12px;padding:9px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;line-height:1.4;}
 .btn-nav .ar{font-size:11px;display:block;opacity:.85;}
 @media(max-width:640px){.nav-links .nav-link{display:none;}}
-
-/* HERO */
-.hero{min-height:100vh;
-  background:linear-gradient(155deg,var(--blue) 0%,var(--blue-dark) 55%,var(--blue-deep) 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:110px 28px 70px;position:relative;overflow:hidden;}
+.hero{min-height:100vh;background:linear-gradient(155deg,var(--blue) 0%,var(--blue-dark) 55%,var(--blue-deep) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 28px 70px;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.06);}
 .hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04);}
-.hero-badge{background:rgba(255,255,255,.18);color:#fff;border-radius:30px;
-  padding:8px 20px;font-size:13px;font-weight:700;margin-bottom:28px;
-  border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px);display:inline-block;}
+.hero-badge{background:rgba(255,255,255,.18);color:#fff;border-radius:30px;padding:8px 20px;font-size:13px;font-weight:700;margin-bottom:28px;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px);display:inline-block;}
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:52px;}
-.btn-primary{background:rgba(255,255,255,.97);color:var(--blue);border:none;
-  border-radius:16px;padding:14px 28px;font-size:15px;font-weight:900;
-  cursor:pointer;font-family:inherit;box-shadow:0 10px 28px rgba(0,0,0,.22);
-  text-decoration:none;display:inline-block;transition:.2s;text-align:center;}
+.btn-primary{background:rgba(255,255,255,.97);color:var(--blue);border:none;border-radius:16px;padding:14px 28px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 10px 28px rgba(0,0,0,.22);text-decoration:none;display:inline-block;transition:.2s;text-align:center;}
 .btn-primary:hover{transform:translateY(-2px);}
 .btn-primary .ar{font-size:12px;font-family:'Tajawal',sans-serif;opacity:.8;margin-top:2px;}
-.btn-outline-hero{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);
-  border-radius:16px;padding:13px 26px;font-size:15px;font-weight:800;
-  cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;transition:.2s;text-align:center;}
+.btn-outline-hero{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:16px;padding:13px 26px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;transition:.2s;text-align:center;}
 .btn-outline-hero:hover{background:rgba(255,255,255,.1);}
 .btn-outline-hero .ar{font-size:12px;font-family:'Tajawal',sans-serif;opacity:.75;margin-top:2px;}
 .hero-stats{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;}
@@ -64,14 +43,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 .hero-stat-n{font-size:28px;font-weight:900;}
 .hero-stat-l{font-size:11px;opacity:.65;margin-top:2px;}
 .hero-stat-ar{font-size:11px;opacity:.45;font-family:'Tajawal',sans-serif;}
-
-/* BILINGUAL LINE */
 .bi{margin-bottom:6px;}
 .bi-fr{font-size:clamp(20px,3.5vw,38px);font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.15;}
 .bi-fr.muted{color:rgba(255,255,255,.7);}
 .bi-ar{font-family:'Tajawal',sans-serif;direction:rtl;font-weight:800;color:rgba(255,255,255,.5);line-height:1.2;}
-
-/* SECTIONS */
 section{padding:80px 28px;}
 .section-label{font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:4px;}
 .section-label-ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;font-weight:800;color:var(--blue);opacity:.7;margin-bottom:12px;}
@@ -82,8 +57,6 @@ section{padding:80px 28px;}
 .container{max-width:1100px;margin:0 auto;}
 .center{text-align:center;}
 .center .section-sub,.center .section-sub-ar{margin:0 auto;}
-
-/* STEPS */
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;margin-top:48px;}
 .step{background:var(--white);border-radius:24px;padding:26px 22px;border:1px solid var(--border);box-shadow:0 4px 20px var(--blue-glow);transition:.25s;}
 .step:hover{transform:translateY(-4px);}
@@ -92,8 +65,6 @@ section{padding:80px 28px;}
 .step h3-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:14px;font-weight:800;color:var(--dark);opacity:.6;margin-bottom:8px;}
 .step p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;}
 .step p-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;color:var(--muted);opacity:.75;line-height:1.6;}
-
-/* CATS */
 .cats-section{background:var(--white);}
 .cats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:42px;}
 .cat-card{background:var(--bg);border-radius:18px;padding:18px 12px;text-align:center;border:1.5px solid var(--border);cursor:pointer;transition:.2s;}
@@ -101,8 +72,6 @@ section{padding:80px 28px;}
 .cat-card-icon{font-size:28px;margin-bottom:8px;}
 .cat-card-name{font-size:13px;font-weight:700;color:var(--dark);}
 .cat-card-name-ar{font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:var(--muted);margin-top:2px;}
-
-/* FOR WHO */
 .for-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:48px;}
 @media(max-width:700px){.for-grid{grid-template-columns:1fr;}}
 .for-card{border-radius:28px;padding:32px 28px;}
@@ -124,8 +93,6 @@ section{padding:80px 28px;}
 .for-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:14px;}
 .for-badge-client{background:var(--blue-bg);color:var(--blue);}
 .for-badge-pro{background:rgba(255,255,255,.15);color:#fff;}
-
-/* PRICING */
 .pricing-section{background:var(--dark);}
 .pricing-section .section-title,.pricing-section .section-label{color:#fff;}
 .pricing-section .section-title-ar{color:rgba(255,255,255,.6);}
@@ -150,8 +117,6 @@ section{padding:80px 28px;}
 .price-free p{color:rgba(255,255,255,.7);font-size:14px;line-height:1.7;margin-bottom:4px;}
 .price-free p.ar{font-size:13px;color:rgba(255,255,255,.45);}
 .price-free strong{color:#7DF3C0;}
-
-/* SOON */
 .soon-section{background:linear-gradient(155deg,var(--blue) 0%,var(--blue-dark) 60%,var(--blue-deep) 100%);padding:80px 28px;}
 .soon-section .section-label,.soon-section .section-label-ar{color:rgba(255,255,255,.7);}
 .soon-section .section-title,.soon-section .section-title-ar{color:#fff;}
@@ -173,26 +138,21 @@ section{padding:80px 28px;}
 .waitlist-counter{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 16px;font-size:13px;color:#fff;font-weight:600;margin-top:14px;}
 .waitlist-dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-
-/* CTA */
 .cta-section{background:var(--dark);text-align:center;padding:90px 28px;}
 .cta-section h2{font-size:clamp(26px,5vw,48px);font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-.5px;}
 .cta-section h2-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:clamp(20px,3.5vw,36px);font-weight:900;color:rgba(255,255,255,.5);margin-bottom:14px;}
 .cta-section p{font-size:15px;color:rgba(255,255,255,.6);margin-bottom:4px;line-height:1.7;}
 .cta-section p.ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:14px;color:rgba(255,255,255,.4);margin-bottom:28px;}
-
 footer{background:#020812;padding:34px 28px;text-align:center;}
 footer p{color:rgba(255,255,255,.35);font-size:13px;line-height:2.2;}
 footer a{color:rgba(255,255,255,.5);text-decoration:none;}
 footer a:hover{color:var(--blue-light);}
-
 .fade-in{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
 .fade-in.visible{opacity:1;transform:none;}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a class="nav-logo" href="#">
     <div class="nav-logo-icon">📅</div>
@@ -206,19 +166,15 @@ footer a:hover{color:var(--blue-light);}
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-badge">🇩🇿 Bientôt disponible à Oran &nbsp;·&nbsp; قريباً في وهران</div>
-
   <div style="margin-bottom:16px;">
     <div style="font-size:clamp(52px,10vw,115px);font-weight:900;color:#fff;letter-spacing:-2px;line-height:1;">Réservez</div>
     <div class="ar" style="font-size:clamp(32px,6vw,68px);font-weight:900;color:rgba(255,255,255,.6);letter-spacing:-1px;line-height:1.1;">احجز</div>
   </div>
-
   <div class="bi"><div class="bi-fr">Le bon professionnel.</div><div class="bi-ar" style="font-size:clamp(15px,2.5vw,24px);">المحترف الصح.</div></div>
   <div class="bi"><div class="bi-fr muted">Au bon moment.</div><div class="bi-ar" style="font-size:clamp(14px,2vw,22px);">في الوقت الصح.</div></div>
   <div class="bi" style="margin-bottom:32px;"><div class="bi-fr muted" style="color:rgba(255,255,255,.55);">En quelques secondes.</div><div class="bi-ar" style="font-size:clamp(13px,1.8vw,20px);color:rgba(255,255,255,.38);">في ثوانٍ معدودة.</div></div>
-
   <div class="hero-btns">
     <a href="#bientot" class="btn-primary">Rejoindre la liste d'attente →<span class="ar">سجّل في قائمة الانتظار</span></a>
     <a href="#comment" class="btn-outline-hero">Comment ça marche<span class="ar">كيفاش يخدم</span></a>
@@ -231,7 +187,6 @@ footer a:hover{color:var(--blue-light);}
   </div>
 </section>
 
-<!-- COMMENT ÇA MARCHE -->
 <section id="comment">
   <div class="container center fade-in">
     <div class="section-label">Simple & Rapide</div>
@@ -243,39 +198,14 @@ footer a:hover{color:var(--blue-light);}
   </div>
   <div class="container">
     <div class="steps">
-      <div class="step fade-in">
-        <div class="step-num">1</div>
-        <h3>Cherchez votre service</h3>
-        <h3-ar>دوّر على الخدمة</h3-ar>
-        <p>Médecin, coiffeur, dentiste, spa… 55 catégories dans votre ville.</p>
-        <p-ar>طبيب، حلاق، طبيب أسنان، سبا… 55 تخصص في مدينتك.</p-ar>
-      </div>
-      <div class="step fade-in">
-        <div class="step-num">2</div>
-        <h3>Choisissez un créneau</h3>
-        <h3-ar>اختار الوقت</h3-ar>
-        <p>Voyez les disponibilités en temps réel. Date et heure à votre convenance.</p>
-        <p-ar>شوف المواعيد المتاحة. اختار التاريخ والوقت اللي يناسبك.</p-ar>
-      </div>
-      <div class="step fade-in">
-        <div class="step-num">3</div>
-        <h3>Confirmé instantanément</h3>
-        <h3-ar>تأكيد فوري</h3-ar>
-        <p>RDV confirmé immédiatement. SMS de rappel la veille.</p>
-        <p-ar>الموعد يتأكد على طول. رسالة SMS تذكير قبل الموعد.</p-ar>
-      </div>
-      <div class="step fade-in">
-        <div class="step-num">✓</div>
-        <h3>Toujours gratuit pour vous</h3>
-        <h3-ar>مجاني دايما</h3-ar>
-        <p>Les clients ne paient jamais rien sur Blasty. 100% gratuit pour toujours.</p>
-        <p-ar>الزبائن ما يدفعوش غير شيء. Blasty مجاني 100% للأفراد.</p-ar>
-      </div>
+      <div class="step fade-in"><div class="step-num">1</div><h3>Cherchez votre service</h3><h3-ar>دوّر على الخدمة</h3-ar><p>Médecin, coiffeur, dentiste, spa… 55 catégories dans votre ville.</p><p-ar>طبيب، حلاق، طبيب أسنان، سبا… 55 تخصص في مدينتك.</p-ar></div>
+      <div class="step fade-in"><div class="step-num">2</div><h3>Choisissez un créneau</h3><h3-ar>اختار الوقت</h3-ar><p>Voyez les disponibilités en temps réel. Date et heure à votre convenance.</p><p-ar>شوف المواعيد المتاحة. اختار التاريخ والوقت اللي يناسبك.</p-ar></div>
+      <div class="step fade-in"><div class="step-num">3</div><h3>Confirmé instantanément</h3><h3-ar>تأكيد فوري</h3-ar><p>RDV confirmé immédiatement. SMS de rappel la veille.</p><p-ar>الموعد يتأكد على طول. رسالة SMS تذكير قبل الموعد.</p-ar></div>
+      <div class="step fade-in"><div class="step-num">✓</div><h3>Toujours gratuit pour vous</h3><h3-ar>مجاني دايما</h3-ar><p>Les clients ne paient jamais rien sur Blasty. 100% gratuit pour toujours.</p><p-ar>الزبائن ما يدفعوش غير شيء. Blasty مجاني 100% للأفراد.</p-ar></div>
     </div>
   </div>
 </section>
 
-<!-- CATEGORIES -->
 <section id="categories" class="cats-section">
   <div class="container center fade-in">
     <div class="section-label">55 catégories</div>
@@ -303,7 +233,6 @@ footer a:hover{color:var(--blue-light);}
   </div>
 </section>
 
-<!-- FOR WHO -->
 <section>
   <div class="container center fade-in">
     <div class="section-label">Pour tout le monde</div>
@@ -336,14 +265,14 @@ footer a:hover{color:var(--blue-light);}
           <li><span class="fr"><span class="check-white">✓</span>Zéro no-show grâce aux rappels SMS</span><span class="arli">ولا غياب بفضل رسائل التذكير</span></li>
           <li><span class="fr"><span class="check-white">✓</span>Tableau de bord complet</span><span class="arli">لوحة تحكم كاملة</span></li>
           <li><span class="fr"><span class="check-white">✓</span>Nouveaux clients sans publicité</span><span class="arli">زبائن جدد بدون إشهار</span></li>
-          <li><span class="fr"><span class="check-white">✓</span>À partir de <strong>4 190 DA/mois</strong></span><span class="arli">من <strong>4 190 دج/شهر</strong></span></li>
+          <li><span class="fr"><span class="check-white">✓</span>À partir de <strong>4 990 DA/mois</strong></span><span class="arli">من <strong>4 990 دج/شهر</strong></span></li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- PRICING — TARIFS MIS À JOUR -->
 <section id="tarifs" class="pricing-section">
   <div class="container center fade-in">
     <div class="section-label">Tarifs professionnels</div>
@@ -358,7 +287,7 @@ footer a:hover{color:var(--blue-light);}
       <div class="price-card fade-in">
         <div class="price-emoji">🌱</div>
         <div class="price-name">Starter</div>
-        <div class="price-amount">4 190 DA</div>
+        <div class="price-amount">4 990 DA</div>
         <div class="price-period">/mois · tout inclus</div>
         <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
         <ul class="price-features">
@@ -372,7 +301,7 @@ footer a:hover{color:var(--blue-light);}
         <div class="price-popular-badge">⭐ Le plus populaire · الأكثر طلباً</div>
         <div class="price-emoji">🌟</div>
         <div class="price-name">Pro</div>
-        <div class="price-amount">12 190 DA</div>
+        <div class="price-amount">12 990 DA</div>
         <div class="price-period">/mois · tout inclus</div>
         <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
         <ul class="price-features">
@@ -386,7 +315,7 @@ footer a:hover{color:var(--blue-light);}
       <div class="price-card fade-in">
         <div class="price-emoji">🏢</div>
         <div class="price-name">Business</div>
-        <div class="price-amount">28 190 DA</div>
+        <div class="price-amount">29 990 DA</div>
         <div class="price-period">/mois · tout inclus</div>
         <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
         <ul class="price-features">
@@ -405,7 +334,7 @@ footer a:hover{color:var(--blue-light);}
         <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
         <ul class="price-features">
           <li><span class="pfr"><span class="price-check">✓</span>Tout Business</span><span class="par">كل مزايا Business</span></li>
-          <li><span class="pfr"><span class="price-check">✓</span>RDV illimités</span><span class="par">مواعيد بلا حدود</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>1 500 RDV/mois</span><span class="par">1500 موعد/شهر</span></li>
           <li><span class="pfr"><span class="price-check">✓</span>3 000 SMS inclus</span><span class="par">3000 رسالة مدرجة</span></li>
           <li><span class="pfr"><span class="price-check">✓</span>Marque blanche</span><span class="par">علامة تجارية خاصة</span></li>
           <li><span class="pfr"><span class="price-check">✓</span>Account manager dédié</span><span class="par">مسؤول حساب خاص</span></li>
@@ -419,7 +348,6 @@ footer a:hover{color:var(--blue-light);}
   </div>
 </section>
 
-<!-- BIENTÔT À ORAN -->
 <section id="bientot" class="soon-section">
   <div class="container center fade-in">
     <div class="section-label">Lancement imminent</div>
@@ -466,7 +394,6 @@ footer a:hover{color:var(--blue-light);}
   </div>
 </section>
 
-<!-- CTA FINAL -->
 <section class="cta-section">
   <div class="container fade-in">
     <h2>Prêt à simplifier votre quotidien ?</h2>
@@ -495,7 +422,6 @@ const obs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
 },{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-
 let count = 247;
 function joinWaitlist(){
   const val = document.getElementById('waitlistInput').value.trim();
