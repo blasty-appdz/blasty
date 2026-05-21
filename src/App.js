@@ -198,7 +198,7 @@ function SplashScreen({ onGo }) {
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 function AuthScreen({ mode, onAuth, onSwitch }) {
-  const [form,setForm]       = useState({ name:"", phone:"", password:"", role:"client" });
+  const [form,setForm]       = useState({ name:"", phone:"", password:"", role:"client", category_id:"", city:"Oran" });
   const [loading,setLoading] = useState(false);
   const [error,setError]     = useState("");
   const isLogin = mode==="login";
@@ -208,6 +208,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
     setError("");
     if (!form.phone||!form.password) { setError("Veuillez remplir tous les champs."); return; }
     if (!isLogin&&!form.name) { setError("Entrez votre nom."); return; }
+    if (!isLogin&&form.role==="professionnel"&&!form.category_id) { setError("Choisissez votre catégorie."); return; }
     setLoading(true);
     try {
       if (isLogin) {
@@ -219,11 +220,14 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
         if (err) { setError("Numéro déjà utilisé ou erreur."); setLoading(false); return; }
         // Si c'est un pro → créer automatiquement sa fiche dans professionals
         if (form.role === "professionnel") {
+          const cat = getCat(form.category_id);
           await supabase.from("professionals").insert({
             user_id:      data.id,
             name:         form.name,
             phone:        form.phone,
-            city:         "Oran",
+            city:         form.city,
+            category_id:  form.category_id,
+            speciality:   cat.label || "",
             active:       true,
             rating:       5.0,
             reviews_count:0,
@@ -259,6 +263,32 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
               <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>{form.role==="client"?"Nom complet":"Nom du salon / cabinet"}</label>
               <input style={inp} placeholder={form.role==="client"?"Yasmine Bouali":"Salon Nour"} value={form.name} onChange={e=>setForm({...form,name:e.target.value})} />
             </div>
+            {form.role==="professionnel" && (
+              <>
+                <div style={{ marginBottom:16 }}>
+                  <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>🏷️ Votre catégorie</label>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:7, maxHeight:200, overflowY:"auto", padding:4 }}>
+                    {CATEGORIES.map(cat=>(
+                      <button key={cat.id} onClick={()=>setForm({...form,category_id:cat.id})}
+                        style={{ background:form.category_id===cat.id?C.blue:C.blueBg, color:form.category_id===cat.id?C.white:C.blue, border:`1.5px solid ${form.category_id===cat.id?C.blue:C.border}`, borderRadius:20, padding:"6px 12px", fontSize:12, fontWeight:600, cursor:"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", gap:4 }}>
+                        {cat.icon} {cat.label}
+                      </button>
+                    ))}
+                  </div>
+                  {form.category_id && (
+                    <div style={{ marginTop:8, background:C.successBg, color:C.success, borderRadius:10, padding:"6px 12px", fontSize:12, fontWeight:700 }}>
+                      ✓ {getCat(form.category_id).icon} {getCat(form.category_id).label} sélectionné
+                    </div>
+                  )}
+                </div>
+                <div style={{ marginBottom:16 }}>
+                  <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>📍 Ville</label>
+                  <select style={inp} value={form.city} onChange={e=>setForm({...form,city:e.target.value})}>
+                    {CITIES.filter(c=>c!=="Toutes villes").map(c=><option key={c}>{c}</option>)}
+                  </select>
+                </div>
+              </>
+            )}
           </>
         )}
         <div style={{ marginBottom:16 }}>
