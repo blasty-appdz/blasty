@@ -201,16 +201,50 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [form,setForm]       = useState({ name:"", phone:"", password:"", role:"client", category_id:"", city:"Oran" });
   const [loading,setLoading] = useState(false);
   const [error,setError]     = useState("");
+  const [otpStep,setOtpStep] = useState(false);  // false = form, true = saisie code
+  const [otpCode,setOtpCode] = useState("");
+  const [otpSent,setOtpSent] = useState(false);
   const isLogin = mode==="login";
+  const SERVER  = "http://localhost:3001";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
-  const handle = async () => {
+  // Formater numéro en +213
+  const formatPhone = (p) => {
+    const clean = p.replace(/\s/g,"");
+    if (clean.startsWith("0")) return "+213" + clean.slice(1);
+    if (clean.startsWith("+213")) return clean;
+    return "+213" + clean;
+  };
+
+  // Étape 1 — valider le form et envoyer OTP
+  const handleSendOtp = async () => {
     setError("");
-    if (!form.phone||!form.password) { setError("Veuillez remplir tous les champs."); return; }
-    if (!isLogin&&!form.name) { setError("Entrez votre nom."); return; }
-    if (!isLogin&&form.role==="professionnel"&&!form.category_id) { setError("Choisissez votre catégorie."); return; }
+    if (!form.phone) { setError("Entrez votre numéro."); return; }
+    if (!isLogin && !form.name) { setError("Entrez votre nom."); return; }
+    if (!isLogin && form.role==="professionnel" && !form.category_id) { setError("Choisissez votre catégorie."); return; }
     setLoading(true);
     try {
+      const phone = formatPhone(form.phone);
+      const res   = await fetch(`${SERVER}/send-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone }) });
+      const data  = await res.json();
+      if (data.success) { setOtpStep(true); setOtpSent(true); }
+      else setError("Erreur envoi SMS : " + (data.error||""));
+    } catch(e) { setError("Serveur OTP inaccessible. Vérifiez que node index.js tourne."); }
+    setLoading(false);
+  };
+
+  // Étape 2 — vérifier le code OTP puis créer/connecter le compte
+  const handleVerifyOtp = async () => {
+    setError("");
+    if (otpCode.length < 4) { setError("Entrez le code reçu par SMS."); return; }
+    setLoading(true);
+    try {
+      const phone = formatPhone(form.phone);
+      const res   = await fetch(`${SERVER}/verify-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone, code:otpCode }) });
+      const check = await res.json();
+      if (!check.success) { setError("Code incorrect ou expiré."); setLoading(false); return; }
+
+      // OTP OK → créer ou connecter le compte
       if (isLogin) {
         const { data, error: err } = await supabase.from("users").select("*").eq("phone", form.phone).single();
         if (err || !data) { setError("Numéro introuvable. Créez un compte."); setLoading(false); return; }
@@ -218,22 +252,13 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       } else {
         const { data, error: err } = await supabase.from("users").insert({ name:form.name, phone:form.phone, role:form.role }).select().single();
         if (err) { setError("Numéro déjà utilisé ou erreur."); setLoading(false); return; }
-        // Si c'est un pro → créer automatiquement sa fiche dans professionals
         if (form.role === "professionnel") {
           const cat = getCat(form.category_id);
           await supabase.from("professionals").insert({
-            user_id:      data.id,
-            name:         form.name,
-            phone:        form.phone,
-            city:         form.city,
-            category_id:  form.category_id,
-            speciality:   cat.label || "",
-            active:       true,
-            rating:       5.0,
-            reviews_count:0,
-            plan:         "starter",
-            next_available:"Disponible",
-            price:        "Sur devis",
+            user_id:form.id, name:form.name, phone:form.phone, city:form.city,
+            category_id:form.category_id, speciality:cat.label||"",
+            active:true, rating:5.0, reviews_count:0, plan:"starter",
+            next_available:"Disponible", price:"Sur devis",
           });
         }
         onAuth(data);
@@ -300,11 +325,41 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
           <input style={inp} placeholder="••••••••" type="password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
         </div>
         {error && <div style={{ background:"#FEE2E2", color:"#B91C1C", borderRadius:12, padding:"10px 14px", fontSize:13, marginBottom:16 }}>⚠️ {error}</div>}
-        <PrimaryBtn onClick={handle} disabled={loading}>{loading?"⏳ Chargement...":isLogin?"Se connecter →":"Créer mon compte →"}</PrimaryBtn>
-        <div style={{ textAlign:"center", marginTop:20, fontSize:14, color:C.muted }}>
-          {isLogin?"Pas encore de compte ? ":"Déjà un compte ? "}
-          <span style={{ color:C.blue, fontWeight:700, cursor:"pointer" }} onClick={onSwitch}>{isLogin?"S'inscrire":"Se connecter"}</span>
-        </div>
+
+        {!otpStep ? (
+          <>
+            <PrimaryBtn onClick={handleSendOtp} disabled={loading}>
+              {loading?"⏳ Envoi SMS...":"📱 Recevoir le code SMS →"}
+            </PrimaryBtn>
+            <div style={{ textAlign:"center", marginTop:20, fontSize:14, color:C.muted }}>
+              {isLogin?"Pas encore de compte ? ":"Déjà un compte ? "}
+              <span style={{ color:C.blue, fontWeight:700, cursor:"pointer" }} onClick={onSwitch}>{isLogin?"S'inscrire":"Se connecter"}</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ background:C.successBg, borderRadius:14, padding:"14px 16px", marginBottom:20, fontSize:13, color:C.success, fontWeight:600, textAlign:"center" }}>
+              📱 Code SMS envoyé au {form.phone}<br/>
+              <span style={{ fontSize:12, fontWeight:400 }}>Valable 10 minutes</span>
+            </div>
+            <div style={{ marginBottom:20 }}>
+              <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>Code de vérification</label>
+              <input
+                style={{ ...inp, fontSize:28, fontWeight:900, textAlign:"center", letterSpacing:12 }}
+                placeholder="------"
+                maxLength={6}
+                value={otpCode}
+                onChange={e=>setOtpCode(e.target.value.replace(/\D/g,""))}
+              />
+            </div>
+            <PrimaryBtn onClick={handleVerifyOtp} disabled={loading}>
+              {loading?"⏳ Vérification...":"✓ Valider le code →"}
+            </PrimaryBtn>
+            <button onClick={()=>{setOtpStep(false);setOtpCode("");setError("");}} style={{ background:"transparent", border:"none", color:C.muted, fontSize:13, cursor:"pointer", fontFamily:"inherit", width:"100%", marginTop:14, textAlign:"center" }}>
+              ← Modifier mon numéro
+            </button>
+          </>
+        )}
         <div style={{ textAlign:"center", marginTop:24, fontSize:12, color:C.muted }}>En continuant, vous acceptez les <span style={{ color:C.blue }}>CGU de {BRAND}</span></div>
       </div>
     </div>
