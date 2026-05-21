@@ -217,6 +217,21 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       } else {
         const { data, error: err } = await supabase.from("users").insert({ name:form.name, phone:form.phone, role:form.role }).select().single();
         if (err) { setError("Numéro déjà utilisé ou erreur."); setLoading(false); return; }
+        // Si c'est un pro → créer automatiquement sa fiche dans professionals
+        if (form.role === "professionnel") {
+          await supabase.from("professionals").insert({
+            user_id:      data.id,
+            name:         form.name,
+            phone:        form.phone,
+            city:         "Oran",
+            active:       true,
+            rating:       5.0,
+            reviews_count:0,
+            plan:         "starter",
+            next_available:"Disponible",
+            price:        "Sur devis",
+          });
+        }
         onAuth(data);
       }
     } catch(e) { setError("Erreur de connexion."); }
