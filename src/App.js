@@ -28,6 +28,14 @@ const C = {
 
 const BRAND = "Blasty";
 
+// ─── TARIFS ───────────────────────────────────────────────────────────────────
+const PLANS = [
+  { id:"starter",  icon:"🌱", name:"Starter",  price:4990,  rdv:50,   sms:100,  popular:false },
+  { id:"pro",      icon:"⭐", name:"Pro",      price:12990, rdv:200,  sms:400,  popular:true  },
+  { id:"business", icon:"🏢", name:"Business", price:29990, rdv:500,  sms:1000, popular:false },
+  { id:"premium",  icon:"👑", name:"Premium",  price:74990, rdv:1500, sms:3000, popular:false },
+];
+
 // ─── CATÉGORIES ───────────────────────────────────────────────────────────────
 const CATEGORIES = [
   { id:"medecin",       label:"Médecin",           labelAr:"طبيب",            icon:"🩺", priority:1, group:"Santé & Médical" },
@@ -203,7 +211,6 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
     setLoading(true);
     try {
       if (isLogin) {
-        // Vérifier si le user existe
         const { data, error: err } = await supabase
           .from("users")
           .select("*")
@@ -212,7 +219,6 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
         if (err || !data) { setError("Numéro introuvable. Créez un compte."); setLoading(false); return; }
         onAuth(data);
       } else {
-        // Créer le user
         const { data, error: err } = await supabase
           .from("users")
           .insert({ name:form.name, phone:form.phone, role:form.role })
@@ -633,10 +639,9 @@ function ProDashboard({ user, isAr }) {
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      // Récupérer le pro lié à ce user
       const { data:proData } = await supabase
         .from("professionals")
-        .select("id")
+        .select("id, plan")
         .eq("user_id", user.id)
         .single();
 
@@ -686,7 +691,30 @@ function ProDashboard({ user, isAr }) {
         </div>
         <div style={{ position:"absolute", bottom:-2, left:0, right:0, height:30, background:C.bg, borderRadius:"50% 50% 0 0 / 20px 20px 0 0" }} />
       </div>
+
       <div style={{ padding:"20px 20px" }}>
+        {/* PLANS TARIFAIRES */}
+        <div style={{ fontSize:16, fontWeight:800, color:C.dark, marginBottom:14 }}>
+          {isAr?"الاشتراكات":"Nos abonnements"}
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:24 }}>
+          {PLANS.map(plan=>(
+            <div key={plan.id} style={{ background:plan.popular?C.blueBg:C.white, border:`${plan.popular?"2px":"1px"} solid ${plan.popular?C.blue:C.border}`, borderRadius:18, padding:"14px 16px", position:"relative" }}>
+              {plan.popular && (
+                <div style={{ position:"absolute", top:-10, left:"50%", transform:"translateX(-50%)", background:C.blue, color:C.white, fontSize:10, fontWeight:800, padding:"3px 10px", borderRadius:20, whiteSpace:"nowrap" }}>
+                  {isAr?"الأكثر شيوعاً":"Plus populaire"}
+                </div>
+              )}
+              <div style={{ fontSize:20, marginBottom:4 }}>{plan.icon}</div>
+              <div style={{ fontSize:14, fontWeight:800, color:C.dark }}>{plan.name}</div>
+              <div style={{ fontSize:18, fontWeight:900, color:C.blue, marginTop:4 }}>
+                {plan.price.toLocaleString("fr-DZ")} <span style={{ fontSize:11, fontWeight:400, color:C.muted }}>DA/mois</span>
+              </div>
+              <div style={{ fontSize:11, color:C.muted, marginTop:6 }}>✓ {plan.rdv} RDV · {plan.sms} SMS</div>
+            </div>
+          ))}
+        </div>
+
         <div style={{ fontSize:16, fontWeight:800, color:C.dark, marginBottom:4 }}>{isAr?"آخر المواعيد":"Derniers rendez-vous"}</div>
         <div style={{ fontSize:13, color:C.muted, marginBottom:14 }}>{getTodayLabel(isAr)}</div>
         {loading ? <Loader /> : rdvs.length===0 ? (
@@ -706,6 +734,7 @@ function ProDashboard({ user, isAr }) {
             </div>
           </Card>
         ))}
+
         <div style={{ fontSize:16, fontWeight:800, color:C.dark, margin:"20px 0 14px" }}>{isAr?"إجراءات سريعة":"Actions rapides"}</div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
           {[["➕",isAr?"موعد جديد":"Nouveau RDV"],["📊",isAr?"إحصائيات":"Statistiques"],["⚙️",isAr?"إعدادات":"Paramètres"],["💬",isAr?"رسائل":"Messages"]].map(([ic,lb])=>(
