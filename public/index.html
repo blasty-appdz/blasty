@@ -83,7 +83,7 @@ section{padding:80px 28px;}
 .for-card-pro h3,.for-card-pro h3-ar{color:#fff;}
 .for-card ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
 .for-card ul li{font-size:13px;line-height:1.5;}
-.for-card ul li .fr{display:block;display:flex;align-items:flex-start;gap:8px;}
+.for-card ul li .fr{display:flex;align-items:flex-start;gap:8px;}
 .for-card ul li .arli{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;opacity:.65;margin-top:1px;padding-right:20px;}
 .for-card-client ul li{color:var(--text);}
 .for-card-pro ul li .fr{color:rgba(255,255,255,.9);}
@@ -93,6 +93,11 @@ section{padding:80px 28px;}
 .for-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:14px;}
 .for-badge-client{background:var(--blue-bg);color:var(--blue);}
 .for-badge-pro{background:rgba(255,255,255,.15);color:#fff;}
+.btn-card{display:block;margin-top:20px;border-radius:14px;padding:13px 24px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;transition:.2s;width:100%;}
+.btn-card:hover{transform:translateY(-2px);}
+.btn-card .ar{font-family:'Tajawal',sans-serif;font-size:12px;opacity:.75;margin-top:3px;display:block;}
+.btn-card-client{background:var(--blue);color:#fff;}
+.btn-card-pro{background:#fff;color:var(--blue);}
 .pricing-section{background:var(--dark);}
 .pricing-section .section-title,.pricing-section .section-label{color:#fff;}
 .pricing-section .section-title-ar{color:rgba(255,255,255,.6);}
@@ -126,18 +131,17 @@ section{padding:80px 28px;}
 .sector-pill:hover{background:rgba(255,255,255,.25);}
 .sector-pill .pfr{font-size:13px;font-weight:600;color:#fff;}
 .sector-pill .par{font-family:'Tajawal',sans-serif;font-size:12px;color:rgba(255,255,255,.6);margin-top:2px;}
-.waitlist-box{background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.25);border-radius:24px;padding:30px 26px;margin-top:40px;max-width:520px;margin-left:auto;margin-right:auto;text-align:center;}
-.waitlist-box h3{color:#fff;font-size:19px;font-weight:800;margin-bottom:3px;}
-.waitlist-box h3-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:16px;font-weight:800;color:rgba(255,255,255,.6);margin-bottom:10px;}
-.waitlist-box p{color:rgba(255,255,255,.75);font-size:14px;margin-bottom:3px;line-height:1.6;}
-.waitlist-box p.ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:18px;}
-.waitlist-form{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-.waitlist-input{flex:1;min-width:200px;background:rgba(255,255,255,.95);border:none;border-radius:14px;padding:13px 16px;font-size:14px;font-family:inherit;color:var(--text);outline:none;}
-.waitlist-btn{background:#fff;color:var(--blue);border:none;border-radius:14px;padding:13px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;text-align:center;line-height:1.4;}
-.waitlist-btn .ar{font-family:'Tajawal',sans-serif;font-size:12px;opacity:.7;margin-top:1px;}
-.waitlist-counter{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 16px;font-size:13px;color:#fff;font-weight:600;margin-top:14px;}
-.waitlist-dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.cta-pro-box{background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.25);border-radius:24px;padding:36px 28px;margin-top:40px;max-width:560px;margin-left:auto;margin-right:auto;text-align:center;}
+.cta-pro-box h3{color:#fff;font-size:22px;font-weight:900;margin-bottom:4px;}
+.cta-pro-box h3-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:18px;font-weight:900;color:rgba(255,255,255,.6);margin-bottom:10px;}
+.cta-pro-box p{color:rgba(255,255,255,.75);font-size:14px;margin-bottom:4px;line-height:1.6;}
+.cta-pro-box p.ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:22px;}
+.btn-cta-pro{display:block;background:#fff;color:var(--blue);border-radius:16px;padding:15px 28px;font-size:15px;font-weight:900;text-decoration:none;text-align:center;transition:.2s;box-shadow:0 8px 24px rgba(0,0,0,.2);margin-bottom:10px;}
+.btn-cta-pro:hover{transform:translateY(-2px);}
+.btn-cta-pro .ar{font-family:'Tajawal',sans-serif;font-size:12px;opacity:.7;margin-top:3px;display:block;}
+.btn-cta-client{display:block;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:16px;padding:13px 28px;font-size:14px;font-weight:800;text-decoration:none;text-align:center;transition:.2s;}
+.btn-cta-client:hover{background:rgba(255,255,255,.1);}
+.btn-cta-client .ar{font-family:'Tajawal',sans-serif;font-size:12px;opacity:.7;margin-top:3px;display:block;}
 .cta-section{background:var(--dark);text-align:center;padding:90px 28px;}
 .cta-section h2{font-size:clamp(26px,5vw,48px);font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-.5px;}
 .cta-section h2-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:clamp(20px,3.5vw,36px);font-weight:900;color:rgba(255,255,255,.5);margin-bottom:14px;}
@@ -162,12 +166,12 @@ footer a:hover{color:var(--blue-light);}
     <a href="#comment" class="nav-link">Comment ça marche<span class="ar">كيفاش يخدم</span></a>
     <a href="#categories" class="nav-link">Catégories<span class="ar">التخصصات</span></a>
     <a href="#tarifs" class="nav-link">Tarifs<span class="ar">الأسعار</span></a>
-    <a href="#bientot" class="btn-nav">Rejoindre la liste<span class="ar">سجّل في القائمة</span></a>
+    <a href="https://blasty-one.vercel.app?role=pro" class="btn-nav">Inscrire mon établissement<span class="ar">سجّل نشاطك</span></a>
   </div>
 </nav>
 
 <section class="hero">
-  <div class="hero-badge">🇩🇿 Bientôt disponible à Oran &nbsp;·&nbsp; قريباً في وهران</div>
+  <div class="hero-badge">🇩🇿 Disponible à Oran &nbsp;·&nbsp; متاح في وهران</div>
   <div style="margin-bottom:16px;">
     <div style="font-size:clamp(52px,10vw,115px);font-weight:900;color:#fff;letter-spacing:-2px;line-height:1;">Réservez</div>
     <div class="ar" style="font-size:clamp(32px,6vw,68px);font-weight:900;color:rgba(255,255,255,.6);letter-spacing:-1px;line-height:1.1;">احجز</div>
@@ -176,8 +180,8 @@ footer a:hover{color:var(--blue-light);}
   <div class="bi"><div class="bi-fr muted">Au bon moment.</div><div class="bi-ar" style="font-size:clamp(14px,2vw,22px);">في الوقت الصح.</div></div>
   <div class="bi" style="margin-bottom:32px;"><div class="bi-fr muted" style="color:rgba(255,255,255,.55);">En quelques secondes.</div><div class="bi-ar" style="font-size:clamp(13px,1.8vw,20px);color:rgba(255,255,255,.38);">في ثوانٍ معدودة.</div></div>
   <div class="hero-btns">
-    <a href="#bientot" class="btn-primary">Rejoindre la liste d'attente →<span class="ar">سجّل في قائمة الانتظار</span></a>
-    <a href="#comment" class="btn-outline-hero">Comment ça marche<span class="ar">كيفاش يخدم</span></a>
+    <a href="https://blasty-one.vercel.app" class="btn-primary">Réserver maintenant →<span class="ar">احجز الآن</span></a>
+    <a href="https://blasty-one.vercel.app?role=pro" class="btn-outline-hero">Inscrire mon établissement<span class="ar">سجّل نشاطك</span></a>
   </div>
   <div class="hero-stats">
     <div class="hero-stat"><div class="hero-stat-n">55</div><div class="hero-stat-l">Catégories</div><div class="hero-stat-ar">تخصص</div></div>
@@ -255,6 +259,9 @@ footer a:hover{color:var(--blue-light);}
           <li><span class="fr"><span class="check-blue">✓</span>Tous vos RDV en un seul endroit</span><span class="arli">كل مواعيدك في مكان واحد</span></li>
           <li><span class="fr"><span class="check-blue">✓</span><strong>100% gratuit, toujours</strong></span><span class="arli"><strong>مجاني 100%، دايما</strong></span></li>
         </ul>
+        <a href="https://blasty-one.vercel.app" class="btn-card btn-card-client">
+          Réserver maintenant →<span class="ar">احجز الآن</span>
+        </a>
       </div>
       <div class="for-card for-card-pro fade-in">
         <div class="for-badge for-badge-pro">💼 Pour les pros · للمحترفين</div>
@@ -267,12 +274,14 @@ footer a:hover{color:var(--blue-light);}
           <li><span class="fr"><span class="check-white">✓</span>Nouveaux clients sans publicité</span><span class="arli">زبائن جدد بدون إشهار</span></li>
           <li><span class="fr"><span class="check-white">✓</span>À partir de <strong>4 990 DA/mois</strong></span><span class="arli">من <strong>4 990 دج/شهر</strong></span></li>
         </ul>
+        <a href="https://blasty-one.vercel.app?role=pro" class="btn-card btn-card-pro">
+          💼 Inscrire mon établissement →<span class="ar">سجّل نشاطك الآن</span>
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING — TARIFS MIS À JOUR -->
 <section id="tarifs" class="pricing-section">
   <div class="container center fade-in">
     <div class="section-label">Tarifs professionnels</div>
@@ -350,12 +359,12 @@ footer a:hover{color:var(--blue-light);}
 
 <section id="bientot" class="soon-section">
   <div class="container center fade-in">
-    <div class="section-label">Lancement imminent</div>
-    <div class="section-label-ar">الإطلاق قريب</div>
-    <h2 class="section-title">Bientôt disponible à Oran</h2>
-    <div class="section-title-ar">قريباً في وهران</div>
-    <p class="section-sub">Blasty arrive à Oran. Soyez parmi les premiers.</p>
-    <p class="section-sub-ar">Blasty جاي لوهران. كونوا من الأوائل.</p>
+    <div class="section-label">Disponible maintenant</div>
+    <div class="section-label-ar">متاح الآن</div>
+    <h2 class="section-title">Blasty est à Oran 🎉</h2>
+    <div class="section-title-ar">Blasty في وهران 🎉</div>
+    <p class="section-sub">Inscrivez votre établissement et commencez à recevoir des clients dès aujourd'hui.</p>
+    <p class="section-sub-ar">سجّل نشاطك وابدأ تستقبل زبائن من اليوم.</p>
   </div>
   <div class="container fade-in">
     <div class="sectors-grid">
@@ -374,22 +383,17 @@ footer a:hover{color:var(--blue-light);}
       <div class="sector-pill"><div class="pfr">🐾 Animaux</div><div class="par">الحيوانات</div></div>
       <div class="sector-pill"><div class="pfr">🏗️ Administratif</div><div class="par">الإداري</div></div>
     </div>
-    <div class="waitlist-box fade-in">
-      <h3>Soyez le premier informé</h3>
-      <h3-ar>كن أول من يعرف</h3-ar>
-      <p>Laissez votre numéro ou email. On vous prévient dès le lancement.</p>
-      <p class="ar">خلّي رقمك أو إيميلك. نعلمك أول ما نطلقوا.</p>
-      <div class="waitlist-form">
-        <input class="waitlist-input" type="text" placeholder="Numéro ou email · رقم أو إيميل" id="waitlistInput"/>
-        <button class="waitlist-btn" onclick="joinWaitlist()">Je m'inscris →<span class="ar">سجّلني</span></button>
-      </div>
-      <div id="waitlistMsg" style="display:none;margin-top:14px;color:#7DF3C0;font-size:14px;font-weight:700;">
-        ✅ Inscription confirmée ! · تم التسجيل بنجاح !
-      </div>
-      <div class="waitlist-counter">
-        <span class="waitlist-dot"></span>
-        <span id="waitCount">247 personnes</span> déjà inscrites · مسجلين بالفعل
-      </div>
+    <div class="cta-pro-box fade-in">
+      <h3>Vous êtes un professionnel ?</h3>
+      <h3-ar>أنت محترف؟</h3-ar>
+      <p>Inscrivez votre établissement en 2 minutes. Recevez vos premiers clients aujourd'hui.</p>
+      <p class="ar">سجّل نشاطك في دقيقتين. استقبل زبائنك من اليوم.</p>
+      <a href="https://blasty-one.vercel.app?role=pro" class="btn-cta-pro">
+        💼 Inscrire mon établissement gratuitement →<span class="ar">سجّل نشاطك مجاناً</span>
+      </a>
+      <a href="https://blasty-one.vercel.app" class="btn-cta-client">
+        👤 Je suis un client, je veux réserver<span class="ar">أنا زبون، نحجز</span>
+      </a>
     </div>
   </div>
 </section>
@@ -401,8 +405,8 @@ footer a:hover{color:var(--blue-light);}
     <p>Rejoignez les premiers Algériens qui réservent avec Blasty.</p>
     <p class="ar">انضم للأوائل اللي يحجزوا مع Blasty.</p>
     <div class="hero-btns">
-      <a href="https://blasty-one.vercel.app" class="btn-primary">Voir la démo →<span class="ar">شوف الديمو</span></a>
-      <a href="#bientot" class="btn-outline-hero">Rejoindre la liste d'attente<span class="ar">سجّل في القائمة</span></a>
+      <a href="https://blasty-one.vercel.app" class="btn-primary">Réserver maintenant →<span class="ar">احجز الآن</span></a>
+      <a href="https://blasty-one.vercel.app?role=pro" class="btn-outline-hero">Inscrire mon établissement<span class="ar">سجّل نشاطك</span></a>
     </div>
   </div>
 </section>
@@ -422,16 +426,6 @@ const obs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
 },{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-let count = 247;
-function joinWaitlist(){
-  const val = document.getElementById('waitlistInput').value.trim();
-  if(!val) return;
-  count++;
-  document.getElementById('waitCount').textContent = count + ' personnes';
-  document.getElementById('waitlistMsg').style.display = 'block';
-  document.getElementById('waitlistInput').value = '';
-  document.getElementById('waitlistInput').disabled = true;
-}
 </script>
 </body>
 </html>
