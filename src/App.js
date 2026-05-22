@@ -105,6 +105,172 @@ const DAYS_AR  = ["أحد","اثن","ثلا","أرب","خمي","جمع","سبت"
 const CITIES   = ["Toutes villes","Oran","Alger","Constantine","Annaba","Tizi Ouzou","Sétif","Blida"];
 const TIME_SLOTS = ["09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
 
+// ─── OFFRES PARTENAIRES ───────────────────────────────────────────────────────
+// Pour ajouter une offre : copie un bloc { } et modifie les valeurs
+const PARTNER_OFFERS = [
+  {
+    id: 1,
+    emoji: "🍽️",
+    name: "Restaurant El Bahia",
+    category: "Restaurant · Oran Centre",
+    promoTag: "-15%",
+    offerTitle: "Réduction de 15% ce weekend sur tous les menus",
+    offerSub: "Offre valable sam & dim · 50 places restantes",
+    bgColor: "#1A1A2E",
+    bgColor2: "#0F3460",
+    professionalId: null, // mettre l'ID Supabase du pro ici plus tard
+  },
+  {
+    id: 2,
+    emoji: "💇",
+    name: "Salon Prestige Oran",
+    category: "Coiffure & Beauté · Bir El Djir",
+    promoTag: "Offre spéciale",
+    offerTitle: "Coupe + soin offert pour toute réservation via Blasty",
+    offerSub: "Valable toute la semaine · 20 créneaux disponibles",
+    bgColor: "#1A2E1A",
+    bgColor2: "#0D3B0D",
+    professionalId: null,
+  },
+  {
+    id: 3,
+    emoji: "🏨",
+    name: "Hôtel Les Falaises",
+    category: "Hôtel 4★ · Front de Mer Oran",
+    promoTag: "-20%",
+    offerTitle: "20% de réduction sur les chambres du weekend",
+    offerSub: "Check-in ven–dim · Petit-déjeuner inclus",
+    bgColor: "#2E1A1A",
+    bgColor2: "#3B0D0D",
+    professionalId: null,
+  },
+];
+
+// ─── COMPOSANT BANNIÈRE PARTENAIRE ────────────────────────────────────────────
+function PartnerBanner({ isAr, onBook }) {
+  const [current, setCurrent] = useState(0);
+
+  // Rotation automatique toutes les 4 secondes
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % PARTNER_OFFERS.length);
+    }, 4000);
+    return () => clearInterval(timer); // nettoyage quand le composant disparaît
+  }, []);
+
+  const offer = PARTNER_OFFERS[current];
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+
+      {/* Titre de la section */}
+      <div style={{ fontSize: 16, fontWeight: 800, color: C.dark, marginBottom: 12 }}>
+        {isAr ? "⭐ عروض الشركاء" : "⭐ Offres partenaires"}
+      </div>
+
+      {/* La carte principale */}
+      <div style={{
+        borderRadius: 22,
+        overflow: "hidden",
+        border: "2px solid #E8B84B",
+        background: C.white,
+        boxShadow: "0 4px 20px rgba(232,184,75,0.25)",
+      }}>
+
+        {/* Partie haute colorée */}
+        <div style={{
+          background: `linear-gradient(135deg, ${offer.bgColor} 0%, ${offer.bgColor2} 100%)`,
+          padding: "16px 16px 14px",
+        }}>
+          {/* Badge "Offre Partenaire" */}
+          <div style={{
+            display: "inline-block",
+            background: "#E8B84B",
+            color: "#7A5700",
+            fontSize: 11,
+            fontWeight: 700,
+            padding: "3px 12px",
+            borderRadius: 20,
+            marginBottom: 12,
+          }}>
+            ⭐ {isAr ? "عرض شريك" : "Offre Partenaire"}
+          </div>
+
+          {/* Logo + nom + tag promo */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{
+              width: 50, height: 50, borderRadius: 14,
+              background: "rgba(255,255,255,0.95)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 26, flexShrink: 0,
+            }}>
+              {offer.emoji}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>{offer.name}</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", marginTop: 2 }}>{offer.category}</div>
+            </div>
+            <div style={{
+              background: "rgba(255,255,255,0.15)",
+              border: "1px solid rgba(255,255,255,0.3)",
+              color: "#fff",
+              fontSize: 13, fontWeight: 800,
+              padding: "5px 12px", borderRadius: 10,
+              flexShrink: 0,
+            }}>
+              {offer.promoTag}
+            </div>
+          </div>
+        </div>
+
+        {/* Partie basse blanche */}
+        <div style={{
+          padding: "14px 16px",
+          display: "flex", alignItems: "center",
+          justifyContent: "space-between", gap: 12,
+        }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.dark }}>{offer.offerTitle}</div>
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 3 }}>{offer.offerSub}</div>
+          </div>
+          <button
+            onClick={() => onBook && onBook(offer)}
+            style={{
+              background: `linear-gradient(135deg, ${C.blue}, ${C.blueDark})`,
+              color: C.white, border: "none",
+              borderRadius: 14, padding: "10px 18px",
+              fontSize: 13, fontWeight: 800,
+              cursor: "pointer", fontFamily: "inherit",
+              flexShrink: 0,
+              boxShadow: `0 4px 14px ${C.blueGlow}`,
+            }}
+          >
+            {isAr ? "احجز" : "Réserver"}
+          </button>
+        </div>
+      </div>
+
+      {/* Points de navigation (•••) */}
+      <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 10 }}>
+        {PARTNER_OFFERS.map((_, i) => (
+          <div
+            key={i}
+            onClick={() => setCurrent(i)}
+            style={{
+              width: i === current ? 20 : 6,
+              height: 6,
+              borderRadius: 3,
+              background: i === current ? C.blue : C.border,
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function getTodayLabel(isAr) {
   const now = new Date();
   const daysFR  = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
@@ -206,7 +372,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [otpStep,setOtpStep] = useState(false);
   const [otpCode,setOtpCode] = useState("");
   const isLogin = mode==="login";
-  const SERVER  = "http://localhost:3001";
+  const SERVER  = "https://blasty-production.up.railway.app";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
   const formatPhone = (p) => {
@@ -228,7 +394,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const data  = await res.json();
       if (data.success) { setOtpStep(true); }
       else setError("Erreur envoi SMS : " + (data.error||""));
-    } catch(e) { setError("Serveur OTP inaccessible. Vérifiez que node index.js tourne."); }
+    } catch(e) { setError("Serveur OTP inaccessible."); }
     setLoading(false);
   };
 
@@ -252,7 +418,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
         if (form.role === "professionnel") {
           const cat = getCat(form.category_id);
           await supabase.from("professionals").insert({
-            user_id:form.id, name:form.name, phone:form.phone, city:form.city,
+            user_id:data.id, name:form.name, phone:form.phone, city:form.city,
             category_id:form.category_id, speciality:cat.label||"",
             active:true, rating:5.0, reviews_count:0, plan:"starter",
             next_available:"Disponible", price:"Sur devis",
@@ -424,7 +590,15 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
         ))}
       </div>
 
+      {/* ───── BANNIÈRE PARTENAIRE ici ───── */}
       <div style={{ padding:"18px 20px 0" }}>
+        <PartnerBanner isAr={isAr} onBook={(offer) => {
+          // Pour l'instant : alerte simple. Plus tard : navigate vers la fiche pro
+          alert(`Redirection vers ${offer.name} — connecte l'ID Supabase dans PARTNER_OFFERS`);
+        }} />
+      </div>
+
+      <div style={{ padding:"0 20px 0" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
           <div style={{ fontSize:16, fontWeight:800, color:C.dark }}>{isAr?"التخصصات":"Catégories populaires"}</div>
           <button onClick={()=>setShowCats(!showCats)} style={{ background:C.blueBg, color:C.blue, border:"none", borderRadius:20, padding:"5px 12px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
@@ -714,8 +888,8 @@ function ProDashboard({ user, isAr }) {
       }
       setLoading(false);
     };
-    fetchData(); // eslint-disable-line react-hooks/exhaustive-deps
-  }, [user.id]); // eslint-disable-line react-hooks/exhaustive-deps
+    fetchData();
+  }, [user.id]);
 
   const saveProfile = async () => {
     if (!proInfo) return;
@@ -832,237 +1006,4 @@ function ProDashboard({ user, isAr }) {
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, margin:"20px 0 12px" }}>{isAr?"خطط الاشتراك":"Abonnements"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
               {PLANS.map(plan=>(
-                <div key={plan.id} style={{ background:plan.popular?C.blueBg:C.white, border:`${plan.id===currentPlan.id?"2px":"1px"} solid ${plan.id===currentPlan.id?C.blue:C.border}`, borderRadius:18, padding:"14px", position:"relative" }}>
-                  {plan.popular && <div style={{ position:"absolute", top:-9, left:"50%", transform:"translateX(-50%)", background:C.blue, color:C.white, fontSize:9, fontWeight:800, padding:"2px 8px", borderRadius:20, whiteSpace:"nowrap" }}>{isAr?"الأشهر":"Populaire"}</div>}
-                  <div style={{ fontSize:18 }}>{plan.icon}</div>
-                  <div style={{ fontSize:13, fontWeight:800, color:C.dark, marginTop:4 }}>{plan.name}</div>
-                  <div style={{ fontSize:16, fontWeight:900, color:C.blue }}>{plan.price.toLocaleString("fr-DZ")} <span style={{ fontSize:10, color:C.muted }}>DA/mois</span></div>
-                  <div style={{ fontSize:10, color:C.muted, marginTop:4 }}>✓ {plan.rdv} RDV · {plan.sms} SMS</div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {activeTab==="agenda" && (
-          <>
-            <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>
-              📋 {isAr?"جميع المواعيد":"Tous les rendez-vous"} ({rdvs.length})
-            </div>
-            {loading ? <Loader /> : rdvs.length===0 ? (
-              <div style={{ textAlign:"center", padding:50, color:C.muted }}>
-                <div style={{ fontSize:40 }}>📅</div>
-                <div style={{ marginTop:10, fontSize:14 }}>{isAr?"لا توجد مواعيد بعد":"Aucun RDV pour l'instant"}</div>
-              </div>
-            ) : rdvs.map((r,i)=>(
-              <Card key={i} style={{ padding:"14px 16px" }}>
-                <div style={{ display:"flex", alignItems:"flex-start", gap:12 }}>
-                  <div style={{ width:50, height:50, borderRadius:14, background:C.blueBg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                    <div style={{ fontSize:11, fontWeight:900, color:C.blue }}>{r.time}</div>
-                    <div style={{ fontSize:9, color:C.muted, marginTop:1 }}>{r.date?.split("/").slice(0,2).join("/")}</div>
-                  </div>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontSize:14, fontWeight:800, color:C.dark }}>{r.client_name}</div>
-                    <div style={{ fontSize:12, color:C.muted }}>📞 {r.client_phone}</div>
-                    {r.note && <div style={{ fontSize:11, color:C.muted, marginTop:2, fontStyle:"italic" }}>"{r.note}"</div>}
-                  </div>
-                  <StatusBadge status={r.status} isAr={isAr} />
-                </div>
-                {r.status==="pending" && (
-                  <div style={{ display:"flex", gap:8, marginTop:10 }}>
-                    <button onClick={()=>updateStatus(r.id,"confirmed")} style={{ flex:1, background:C.successBg, color:C.success, border:`1px solid ${C.success}`, borderRadius:10, padding:"7px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
-                      ✓ {isAr?"قبول":"Confirmer"}
-                    </button>
-                    <button onClick={()=>updateStatus(r.id,"cancelled")} style={{ flex:1, background:"#FEE2E2", color:"#B91C1C", border:"1px solid #B91C1C", borderRadius:10, padding:"7px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
-                      ✕ {isAr?"رفض":"Annuler"}
-                    </button>
-                  </div>
-                )}
-              </Card>
-            ))}
-          </>
-        )}
-
-        {activeTab==="clients" && (
-          <>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-              <div style={{ fontSize:15, fontWeight:800, color:C.dark }}>👥 {isAr?"قاعدة العملاء":"Base clients"}</div>
-              <span style={{ fontSize:12, color:C.muted }}>{clients.length} {isAr?"عميل":"clients"}</span>
-            </div>
-            {clients.length===0 ? (
-              <div style={{ textAlign:"center", padding:50, color:C.muted }}>
-                <div style={{ fontSize:40 }}>👥</div>
-                <div style={{ marginTop:10, fontSize:14 }}>{isAr?"لا عملاء بعد":"Aucun client pour l'instant"}</div>
-              </div>
-            ) : clients.sort((a,b)=>b.count-a.count).map((cl,i)=>{
-              const initials = cl.name.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
-              const colors = [["#E1F5EE","#085041"],["#EEF4FF","#003099"],["#FAEEDA","#633806"],["#FBEAF0","#72243E"]];
-              const [bg,fg] = colors[i%4];
-              return (
-                <Card key={i} style={{ padding:"14px 16px" }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <div style={{ width:44, height:44, borderRadius:"50%", background:bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:700, color:fg, flexShrink:0 }}>{initials}</div>
-                    <div style={{ flex:1 }}>
-                      <div style={{ fontSize:14, fontWeight:800, color:C.dark }}>{cl.name}</div>
-                      <div style={{ fontSize:12, color:C.muted }}>📞 {cl.phone}</div>
-                    </div>
-                    <div style={{ textAlign:"right" }}>
-                      <div style={{ fontSize:13, fontWeight:800, color:C.blue }}>{cl.count} RDV</div>
-                      <div style={{ fontSize:10, color:C.muted }}>dernier: {cl.last}</div>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-          </>
-        )}
-
-        {activeTab==="settings" && (
-          <>
-            <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>⚙️ {isAr?"الملف المهني":"Profil professionnel"}</div>
-            <Card>
-              {[
-                ["name",      isAr?"الاسم الكامل":"Nom complet",  "text", isAr?"اسمك":"Dr. Karim Benali"],
-                ["speciality",isAr?"التخصص":"Spécialité",         "text", isAr?"التخصص":"Médecin généraliste"],
-                ["phone",     isAr?"الهاتف":"Téléphone",          "tel",  "0555 12 34 56"],
-                ["address",   isAr?"العنوان":"Adresse",           "text", isAr?"العنوان":"Rue Larbi Ben M'hidi, Oran"],
-              ].map(([field,label,type,ph])=>(
-                <div key={field} style={{ marginBottom:14 }}>
-                  <label style={{ fontSize:12, fontWeight:700, color:C.muted }}>{label}</label>
-                  <input style={inp} type={type} placeholder={ph} value={proForm[field]} onChange={e=>setProForm({...proForm,[field]:e.target.value})} />
-                </div>
-              ))}
-              <div style={{ marginBottom:14 }}>
-                <label style={{ fontSize:12, fontWeight:700, color:C.muted }}>{isAr?"الوصف":"Description"}</label>
-                <textarea style={{ ...inp, resize:"none", height:80, marginTop:4 }} placeholder={isAr?"وصف قصير...":"Décrivez votre activité..."} value={proForm.description} onChange={e=>setProForm({...proForm,description:e.target.value})} />
-              </div>
-              <PrimaryBtn onClick={saveProfile}>
-                {saved?(isAr?"✓ تم الحفظ":"✓ Sauvegardé !"):isAr?"حفظ التغييرات":"Sauvegarder"}
-              </PrimaryBtn>
-            </Card>
-
-            <div style={{ fontSize:15, fontWeight:800, color:C.dark, margin:"20px 0 12px" }}>{isAr?"الإشعارات":"Notifications"}</div>
-            <Card style={{ padding:0, overflow:"hidden" }}>
-              {[
-                [isAr?"تذكير SMS تلقائي":"Rappel SMS automatique", true],
-                [isAr?"تأكيد الموعد إلزامي":"Confirmation RDV obligatoire", true],
-                [isAr?"قبول عملاء جدد":"Accepter nouveaux clients", true],
-                [isAr?"وضع الإجازة":"Mode congé / vacances", false],
-              ].map(([label,on],i,arr)=>(
-                <div key={label} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", borderBottom:i<arr.length-1?`1px solid ${C.border}`:"none" }}>
-                  <span style={{ fontSize:13, color:C.dark }}>{label}</span>
-                  <div style={{ width:40, height:22, borderRadius:11, background:on?C.blue:C.border, position:"relative", cursor:"pointer", flexShrink:0 }}>
-                    <div style={{ width:18, height:18, borderRadius:"50%", background:C.white, position:"absolute", top:2, [on?"right":"left"]:2, transition:"all .2s" }} />
-                  </div>
-                </div>
-              ))}
-            </Card>
-          </>
-        )}
-
-      </div>
-    </div>
-  );
-}
-
-// ─── PROFILE ──────────────────────────────────────────────────────────────────
-function ProfileScreen({ user, isAr, onLogout }) {
-  const items=[
-    ["👤", isAr?"المعلومات الشخصية":"Informations personnelles"],
-    ["🔔", isAr?"الإشعارات":"Notifications"],
-    ["🔒", isAr?"الأمان":"Sécurité"],
-    ["🌍", isAr?"اللغة والمنطقة":"Langue & région"],
-    ["⭐", isAr?"تقييماتي":"Mes avis"],
-    ["❓", isAr?"المساعدة":"Aide & support"],
-    ["📜", isAr?"الشروط العامة":"CGU"],
-  ];
-  return (
-    <div style={{ paddingBottom:90 }}>
-      <GradHeader>
-        <div style={{ width:74, height:74, borderRadius:22, background:"rgba(255,255,255,.22)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:36, margin:"0 auto 14px" }}>👤</div>
-        <div style={{ fontSize:20, fontWeight:900, color:C.white, textAlign:"center" }}>{user.name}</div>
-        <div style={{ fontSize:14, color:"rgba(255,255,255,.75)", textAlign:"center", marginTop:4 }}>{user.phone}</div>
-        <div style={{ display:"flex", justifyContent:"center", marginTop:12 }}>
-          <span style={{ background:"rgba(255,255,255,.2)", color:C.white, borderRadius:20, padding:"5px 16px", fontSize:12, fontWeight:700 }}>
-            {user.role==="client"?(isAr?"👤 عميل":"👤 Client"):(isAr?"💼 محترف":"💼 Professionnel")}
-          </span>
-        </div>
-      </GradHeader>
-      <div style={{ padding:"20px 20px" }}>
-        <Card style={{ padding:0, overflow:"hidden" }}>
-          {items.map(([ic,lb],i)=>(
-            <div key={lb} style={{ display:"flex", alignItems:"center", gap:14, padding:"16px 18px", borderBottom:i<items.length-1?`1px solid ${C.border}`:"none", cursor:"pointer" }}>
-              <span style={{ fontSize:22 }}>{ic}</span>
-              <span style={{ fontSize:14, fontWeight:600, color:C.dark, flex:1 }}>{lb}</span>
-              <span style={{ color:C.muted }}>›</span>
-            </div>
-          ))}
-        </Card>
-        <OutlineBtn onClick={onLogout} style={{ marginTop:20 }}>🚪 {isAr?"تسجيل الخروج":"Se déconnecter"}</OutlineBtn>
-        <div style={{ textAlign:"center", marginTop:16, fontSize:12, color:C.muted }}>{BRAND} v1.0.0 · 🇩🇿 Oran, Algérie</div>
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-//  ROOT APP
-// ═══════════════════════════════════════════════════════════════════════════════
-export default function App() {
-  const params     = new URLSearchParams(window.location.search);
-  const isProUrl   = params.get("role") === "pro";
-
-  // Session persistante — récupère l'user sauvegardé
-  const savedUser  = (() => { try { const u = localStorage.getItem("blasty_user"); return u ? JSON.parse(u) : null; } catch(e) { return null; } })();
-  const initScreen = isProUrl ? "register" : savedUser ? "app" : "splash";
-
-  const [screen,  setScreen]  = useState(initScreen);
-  const [appPage, setAppPage] = useState("home");
-  const [user,    setUser]    = useState(savedUser || null);
-  const [lang,    setLang]    = useState("fr");
-  const [selPro,  setSelPro]  = useState(null);
-  const [booking, setBooking] = useState(null);
-  const isAr = lang==="ar";
-
-  const handleAuth = u => {
-    localStorage.setItem("blasty_user", JSON.stringify(u));
-    setUser(u); setScreen("app"); setAppPage("home");
-  };
-  const handleBook    = pro => { setSelPro(pro); setAppPage("booking"); };
-  const handleConfirm = b   => { setBooking(b); setAppPage("success"); };
-  const handleLogout  = ()  => { localStorage.removeItem("blasty_user"); setUser(null); setScreen("splash"); };
-
-  const NAV = user?.role==="professionnel"
-    ? [["home","🏠",isAr?"الرئيسية":"Accueil"],["pro","📊",isAr?"داشبورد":"Dashboard"],["profile","👤",isAr?"حساب":"Profil"]]
-    : [["home","🏠",isAr?"الرئيسية":"Accueil"],["myrdv","📅",isAr?"مواعيدي":"Mes RDV"],["profile","👤",isAr?"حساب":"Profil"]];
-
-  const fonts = <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet" />;
-
-  if (screen==="splash")   return <>{fonts}<SplashScreen onGo={setScreen} /></>;
-  if (screen==="login")    return <>{fonts}<AuthScreen mode="login"    onAuth={handleAuth} onSwitch={()=>setScreen("register")} /></>;
-  if (screen==="register") return <>{fonts}<AuthScreen mode="register" onAuth={handleAuth} onSwitch={()=>setScreen("login")}    /></>;
-
-  return (
-    <div style={{ fontFamily:"'Sora','Tajawal',sans-serif", minHeight:"100vh", background:C.bg, color:C.text, direction:isAr?"rtl":"ltr", maxWidth:430, margin:"0 auto", position:"relative" }}>
-      {fonts}
-      {appPage==="home"    && <HomeScreen    user={user} isAr={isAr} lang={lang} setLang={setLang} onBook={handleBook} />}
-      {appPage==="booking" && selPro && <BookingScreen pro={selPro} user={user} isAr={isAr} onBack={()=>setAppPage("home")} onConfirm={handleConfirm} />}
-      {appPage==="success" && booking && <SuccessScreen booking={booking} isAr={isAr} onHome={()=>setAppPage("home")} />}
-      {appPage==="myrdv"   && <MyBookingsScreen user={user} isAr={isAr} />}
-      {appPage==="pro"     && <ProDashboard user={user} isAr={isAr} />}
-      {appPage==="profile" && <ProfileScreen user={user} isAr={isAr} onLogout={handleLogout} />}
-
-      {appPage!=="booking" && appPage!=="success" && (
-        <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:430, background:C.white, borderTop:`1px solid ${C.border}`, display:"flex", justifyContent:"space-around", padding:"10px 0 20px", zIndex:200, boxShadow:`0 -4px 20px rgba(26,110,255,.08)` }}>
-          {NAV.map(([id,ic,lb])=>(
-            <div key={id} onClick={()=>setAppPage(id)} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:3, cursor:"pointer", color:appPage===id?C.blue:C.muted, fontSize:10, fontWeight:appPage===id?800:400, transition:"all .15s" }}>
-              <span style={{ fontSize:22 }}>{ic}</span>
-              <span>{lb}</span>
-              {appPage===id && <div style={{ width:5, height:5, borderRadius:"50%", background:C.blue }} />}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+                <div key={plan.id} style={{ background:plan.popular?C.blueBg:C.white, border:`${plan.id===currentPlan.id?"2px":"1px"} solid ${plan.id===currentPlan.id?C.blue:C.border}`, borderRadius:18
