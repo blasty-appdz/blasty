@@ -1010,20 +1010,27 @@ function ProfileScreen({ user, isAr, onLogout }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function App() {
   const params     = new URLSearchParams(window.location.search);
-  const initScreen = params.get("role") === "pro" ? "register" : "splash";
+  const isProUrl   = params.get("role") === "pro";
+
+  // Session persistante — récupère l'user sauvegardé
+  const savedUser  = (() => { try { const u = localStorage.getItem("blasty_user"); return u ? JSON.parse(u) : null; } catch(e) { return null; } })();
+  const initScreen = isProUrl ? "register" : savedUser ? "app" : "splash";
 
   const [screen,  setScreen]  = useState(initScreen);
   const [appPage, setAppPage] = useState("home");
-  const [user,    setUser]    = useState(null);
+  const [user,    setUser]    = useState(savedUser || null);
   const [lang,    setLang]    = useState("fr");
   const [selPro,  setSelPro]  = useState(null);
   const [booking, setBooking] = useState(null);
   const isAr = lang==="ar";
 
-  const handleAuth    = u   => { setUser(u); setScreen("app"); setAppPage("home"); };
+  const handleAuth = u => {
+    localStorage.setItem("blasty_user", JSON.stringify(u));
+    setUser(u); setScreen("app"); setAppPage("home");
+  };
   const handleBook    = pro => { setSelPro(pro); setAppPage("booking"); };
   const handleConfirm = b   => { setBooking(b); setAppPage("success"); };
-  const handleLogout  = ()  => { setUser(null); setScreen("splash"); };
+  const handleLogout  = ()  => { localStorage.removeItem("blasty_user"); setUser(null); setScreen("splash"); };
 
   const NAV = user?.role==="professionnel"
     ? [["home","🏠",isAr?"الرئيسية":"Accueil"],["pro","📊",isAr?"داشبورد":"Dashboard"],["profile","👤",isAr?"حساب":"Profil"]]
