@@ -198,13 +198,15 @@ function SplashScreen({ onGo }) {
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 function AuthScreen({ mode, onAuth, onSwitch }) {
-  const [form,setForm]       = useState({ name:"", phone:"", password:"", role:"client", category_id:"", city:"Oran" });
+  const params      = new URLSearchParams(window.location.search);
+  const initRole    = params.get("role") === "pro" ? "professionnel" : "client";
+  const [form,setForm]       = useState({ name:"", phone:"", password:"", role:initRole, category_id:"", city:"Oran" });
   const [loading,setLoading] = useState(false);
   const [error,setError]     = useState("");
   const [otpStep,setOtpStep] = useState(false);
   const [otpCode,setOtpCode] = useState("");
   const isLogin = mode==="login";
-  const SERVER = "https://blasty-production.up.railway.app";
+  const SERVER  = "http://localhost:3001";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
   const formatPhone = (p) => {
@@ -1007,7 +1009,10 @@ function ProfileScreen({ user, isAr, onLogout }) {
 //  ROOT APP
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function App() {
-  const [screen,  setScreen]  = useState("splash");
+  const params     = new URLSearchParams(window.location.search);
+  const initScreen = params.get("role") === "pro" ? "register" : "splash";
+
+  const [screen,  setScreen]  = useState(initScreen);
   const [appPage, setAppPage] = useState("home");
   const [user,    setUser]    = useState(null);
   const [lang,    setLang]    = useState("fr");
