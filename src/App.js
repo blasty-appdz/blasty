@@ -41,7 +41,7 @@ const CATEGORIES = [
   { id:"medecin",       label:"Médecin",           labelAr:"طبيب",            icon:"🩺", priority:1, group:"Santé & Médical" },
   { id:"dentiste",      label:"Dentiste",           labelAr:"طبيب أسنان",      icon:"🦷", priority:1, group:"Santé & Médical" },
   { id:"kine",          label:"Kiné",               labelAr:"معالج",           icon:"🦴", priority:1, group:"Santé & Médical" },
-  { id:"specialiste",   label:"Spécialiste",        labelAr:"أخصائي",          icon:"👨‍⚕️", priority:1, group:"Santé & Médical" },
+  { id:"specialiste",   label:"Spécialiste",        labelAr:"أخصائي",          icon:"🩻", priority:1, group:"Santé & Médical" },
   { id:"psy",           label:"Psychologue",        labelAr:"نفساني",          icon:"🧠", priority:1, group:"Santé & Médical" },
   { id:"optique",       label:"Opticien",           labelAr:"بصري",            icon:"👁️", priority:1, group:"Santé & Médical" },
   { id:"veterinaire",   label:"Vétérinaire",        labelAr:"بيطري",           icon:"🐾", priority:1, group:"Santé & Médical" },
