@@ -201,14 +201,12 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [form,setForm]       = useState({ name:"", phone:"", password:"", role:"client", category_id:"", city:"Oran" });
   const [loading,setLoading] = useState(false);
   const [error,setError]     = useState("");
-  const [otpStep,setOtpStep] = useState(false);  // false = form, true = saisie code
+  const [otpStep,setOtpStep] = useState(false);
   const [otpCode,setOtpCode] = useState("");
-  const [otpSent,setOtpSent] = useState(false);
   const isLogin = mode==="login";
   const SERVER  = "http://localhost:3001";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
-  // Formater numéro en +213
   const formatPhone = (p) => {
     const clean = p.replace(/\s/g,"");
     if (clean.startsWith("0")) return "+213" + clean.slice(1);
@@ -216,7 +214,6 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
     return "+213" + clean;
   };
 
-  // Étape 1 — valider le form et envoyer OTP
   const handleSendOtp = async () => {
     setError("");
     if (!form.phone) { setError("Entrez votre numéro."); return; }
@@ -227,13 +224,12 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const phone = formatPhone(form.phone);
       const res   = await fetch(`${SERVER}/send-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone }) });
       const data  = await res.json();
-      if (data.success) { setOtpStep(true); setOtpSent(true); }
+      if (data.success) { setOtpStep(true); }
       else setError("Erreur envoi SMS : " + (data.error||""));
     } catch(e) { setError("Serveur OTP inaccessible. Vérifiez que node index.js tourne."); }
     setLoading(false);
   };
 
-  // Étape 2 — vérifier le code OTP puis créer/connecter le compte
   const handleVerifyOtp = async () => {
     setError("");
     if (otpCode.length < 4) { setError("Entrez le code reçu par SMS."); return; }
@@ -244,7 +240,6 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const check = await res.json();
       if (!check.success) { setError("Code incorrect ou expiré."); setLoading(false); return; }
 
-      // OTP OK → créer ou connecter le compte
       if (isLogin) {
         const { data, error: err } = await supabase.from("users").select("*").eq("phone", form.phone).single();
         if (err || !data) { setError("Numéro introuvable. Créez un compte."); setLoading(false); return; }
@@ -705,13 +700,19 @@ function ProDashboard({ user, isAr }) {
       const { data:proData } = await supabase.from("professionals").select("*").eq("user_id", user.id).single();
       if (proData) {
         setProInfo(proData);
-        setProForm({ name:proData.name||"", speciality:proData.speciality||"", phone:proData.phone||user.phone||"", address:proData.address||"", description:proData.description||"" });
+        setProForm({
+          name:        proData.name        || "",
+          speciality:  proData.speciality  || "",
+          phone:       proData.phone       || user.phone || "",
+          address:     proData.address     || "",
+          description: proData.description || "",
+        });
         const { data:rdvData } = await supabase.from("reservations").select("*").eq("professional_id", proData.id).order("created_at", { ascending:false });
         if (rdvData) setRdvs(rdvData);
       }
       setLoading(false);
     };
-    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id]);
 
   const saveProfile = async () => {
@@ -732,12 +733,10 @@ function ProDashboard({ user, isAr }) {
   const todayStr   = new Date().toLocaleDateString("fr-DZ");
   const todayRdvs  = rdvs.filter(r=>r.date===todayStr);
 
-  // Clients uniques
   const clientsMap = {};
   rdvs.forEach(r => { if (!clientsMap[r.client_phone]) clientsMap[r.client_phone] = { name:r.client_name, phone:r.client_phone, count:0, last:r.date }; clientsMap[r.client_phone].count++; });
   const clients = Object.values(clientsMap);
 
-  // Plan actuel
   const currentPlan = PLANS.find(p=>p.id===proInfo?.plan) || PLANS[1];
   const rdvUsed = rdvs.filter(r=>{ const d=new Date(r.created_at||Date.now()); const now=new Date(); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
 
@@ -747,7 +746,6 @@ function ProDashboard({ user, isAr }) {
 
   return (
     <div style={{ paddingBottom:90 }}>
-      {/* HEADER */}
       <div style={{ background:`linear-gradient(155deg,${C.blue},${C.blueDeep})`, padding:"52px 20px 20px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-30, right:-30, width:140, height:140, borderRadius:"50%", background:"rgba(255,255,255,.06)" }} />
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
@@ -763,7 +761,6 @@ function ProDashboard({ user, isAr }) {
             <div style={{ fontSize:11, color:"rgba(255,255,255,.7)", marginTop:4 }}>{rdvUsed}/{currentPlan.rdv} RDV</div>
           </div>
         </div>
-        {/* STATS RAPIDES */}
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, marginTop:16 }}>
           {[
             [String(rdvs.length), isAr?"إجمالي":"Total", C.blue],
@@ -780,7 +777,6 @@ function ProDashboard({ user, isAr }) {
         <div style={{ position:"absolute", bottom:-2, left:0, right:0, height:30, background:C.bg, borderRadius:"50% 50% 0 0 / 20px 20px 0 0" }} />
       </div>
 
-      {/* TABS */}
       <div style={{ display:"flex", background:C.white, borderBottom:`1px solid ${C.border}`, position:"sticky", top:0, zIndex:10 }}>
         {[["stats","📊",isAr?"إحصائيات":"Stats"],["agenda","📅",isAr?"أجندة":"Agenda"],["clients","👥",isAr?"عملاء":"Clients"],["settings","⚙️",isAr?"إعدادات":"Params"]].map(([t,ic,lb])=>(
           <button key={t} onClick={()=>setActiveTab(t)} style={tabStyle(t)}>{ic} {lb}</button>
@@ -789,10 +785,8 @@ function ProDashboard({ user, isAr }) {
 
       <div style={{ padding:"16px 20px" }}>
 
-        {/* ── STATS ── */}
         {activeTab==="stats" && (
           <>
-            {/* Quota barre */}
             <Card style={{ padding:"14px 16px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
                 <span style={{ fontSize:13, fontWeight:700, color:C.dark }}>{isAr?"الحصة الشهرية":"Quota mensuel"}</span>
@@ -804,7 +798,6 @@ function ProDashboard({ user, isAr }) {
               <div style={{ fontSize:11, color:C.muted, marginTop:6 }}>{currentPlan.icon} Plan {currentPlan.name} · {currentPlan.price.toLocaleString("fr-DZ")} DA/mois</div>
             </Card>
 
-            {/* Résumé statuts */}
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10, marginBottom:14 }}>
               {[[confirmed,isAr?"مؤكدة":"Confirmés",C.success,C.successBg],[pending,isAr?"انتظار":"En attente",C.warn,C.warnBg],[cancelled,isAr?"ملغاة":"Annulés","#B91C1C","#FEE2E2"]].map(([n,l,color,bg])=>(
                 <div key={l} style={{ background:bg, borderRadius:16, padding:"14px 10px", textAlign:"center" }}>
@@ -814,7 +807,6 @@ function ProDashboard({ user, isAr }) {
               ))}
             </div>
 
-            {/* RDV aujourd'hui */}
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:10 }}>
               📅 {isAr?"مواعيد اليوم":"Aujourd'hui"} — {getTodayLabel(isAr)}
             </div>
@@ -835,7 +827,6 @@ function ProDashboard({ user, isAr }) {
               </Card>
             ))}
 
-            {/* Plans */}
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, margin:"20px 0 12px" }}>{isAr?"خطط الاشتراك":"Abonnements"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
               {PLANS.map(plan=>(
@@ -851,7 +842,6 @@ function ProDashboard({ user, isAr }) {
           </>
         )}
 
-        {/* ── AGENDA ── */}
         {activeTab==="agenda" && (
           <>
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>
@@ -876,7 +866,6 @@ function ProDashboard({ user, isAr }) {
                   </div>
                   <StatusBadge status={r.status} isAr={isAr} />
                 </div>
-                {/* Actions */}
                 {r.status==="pending" && (
                   <div style={{ display:"flex", gap:8, marginTop:10 }}>
                     <button onClick={()=>updateStatus(r.id,"confirmed")} style={{ flex:1, background:C.successBg, color:C.success, border:`1px solid ${C.success}`, borderRadius:10, padding:"7px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
@@ -892,7 +881,6 @@ function ProDashboard({ user, isAr }) {
           </>
         )}
 
-        {/* ── CLIENTS ── */}
         {activeTab==="clients" && (
           <>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
@@ -927,16 +915,15 @@ function ProDashboard({ user, isAr }) {
           </>
         )}
 
-        {/* ── PARAMÈTRES ── */}
         {activeTab==="settings" && (
           <>
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>⚙️ {isAr?"الملف المهني":"Profil professionnel"}</div>
             <Card>
               {[
-                ["name",     isAr?"الاسم الكامل":"Nom complet",       "text",  isAr?"اسمك":"Dr. Karim Benali"],
-                ["speciality",isAr?"التخصص":"Spécialité",             "text",  isAr?"التخصص":"Médecin généraliste"],
-                ["phone",    isAr?"الهاتف":"Téléphone",               "tel",   "0555 12 34 56"],
-                ["address",  isAr?"العنوان":"Adresse",                "text",  isAr?"العنوان":"Rue Larbi Ben M'hidi, Oran"],
+                ["name",      isAr?"الاسم الكامل":"Nom complet",  "text", isAr?"اسمك":"Dr. Karim Benali"],
+                ["speciality",isAr?"التخصص":"Spécialité",         "text", isAr?"التخصص":"Médecin généraliste"],
+                ["phone",     isAr?"الهاتف":"Téléphone",          "tel",  "0555 12 34 56"],
+                ["address",   isAr?"العنوان":"Adresse",           "text", isAr?"العنوان":"Rue Larbi Ben M'hidi, Oran"],
               ].map(([field,label,type,ph])=>(
                 <div key={field} style={{ marginBottom:14 }}>
                   <label style={{ fontSize:12, fontWeight:700, color:C.muted }}>{label}</label>
