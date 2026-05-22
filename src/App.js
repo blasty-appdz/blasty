@@ -241,7 +241,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [otpStep, setOtpStep] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const isLogin = mode === "login";
-  const SERVER = "http://localhost:3001";
+  const SERVER = "https://blasty-production.up.railway.app";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
   const formatPhone = (p) => {
