@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-// ─── SUPABASE ─────────────────────────────────────────────────────────────────
 const SUPABASE_URL  = "https://dkpirfevdhvgxrkdqojn.supabase.co";
 const SUPABASE_KEY  = "sb_publishable_rtt-dfO0qA5DQVsqe86hAQ_zM529u_K";
 const supabase      = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const C = {
   blue:      "#1A6EFF",
   blueDark:  "#0048CC",
@@ -28,7 +26,6 @@ const C = {
 
 const BRAND = "Blasty";
 
-// ─── TARIFS ───────────────────────────────────────────────────────────────────
 const PLANS = [
   { id:"starter",  icon:"🌱", name:"Starter",  price:4990,  rdv:50,   sms:100,  popular:false },
   { id:"pro",      icon:"⭐", name:"Pro",      price:12990, rdv:200,  sms:400,  popular:true  },
@@ -36,235 +33,120 @@ const PLANS = [
   { id:"premium",  icon:"👑", name:"Premium",  price:74990, rdv:1500, sms:3000, popular:false },
 ];
 
-// ─── CATÉGORIES ───────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id:"medecin",       label:"Médecin",           labelAr:"طبيب",            icon:"🩺", priority:1, group:"Santé & Médical" },
-  { id:"dentiste",      label:"Dentiste",           labelAr:"طبيب أسنان",      icon:"🦷", priority:1, group:"Santé & Médical" },
-  { id:"kine",          label:"Kiné",               labelAr:"معالج",           icon:"🦴", priority:1, group:"Santé & Médical" },
-  { id:"specialiste",   label:"Spécialiste",        labelAr:"أخصائي",          icon:"🩻", priority:1, group:"Santé & Médical" },
-  { id:"psy",           label:"Psychologue",        labelAr:"نفساني",          icon:"🧠", priority:1, group:"Santé & Médical" },
-  { id:"optique",       label:"Opticien",           labelAr:"بصري",            icon:"👁️", priority:1, group:"Santé & Médical" },
-  { id:"veterinaire",   label:"Vétérinaire",        labelAr:"بيطري",           icon:"🐾", priority:1, group:"Santé & Médical" },
-  { id:"coiffeur",      label:"Coiffeur",           labelAr:"حلاق",            icon:"💇", priority:2, group:"Beauté & Coiffure" },
-  { id:"barbier",       label:"Barbier",            labelAr:"حلاق رجالي",      icon:"✂️", priority:2, group:"Beauté & Coiffure" },
-  { id:"coloriste",     label:"Coloriste",          labelAr:"صبغة شعر",        icon:"🎨", priority:2, group:"Beauté & Coiffure" },
-  { id:"estheticienne", label:"Esthéticienne",      labelAr:"مختصة تجميل",     icon:"💅", priority:3, group:"Esthétique" },
-  { id:"epilation",     label:"Épilation",          labelAr:"إزالة شعر",       icon:"🌸", priority:3, group:"Esthétique" },
-  { id:"maquillage",    label:"Maquillage",         labelAr:"مكياج",           icon:"💄", priority:3, group:"Esthétique" },
-  { id:"tatouage",      label:"Tatouage",           labelAr:"وشم",             icon:"🖊️", priority:3, group:"Esthétique" },
-  { id:"sourcils",      label:"Sourcils & Cils",    labelAr:"رموش وحواجب",     icon:"👁️", priority:3, group:"Esthétique" },
-  { id:"dermato",       label:"Dermatologue",       labelAr:"جلدي",            icon:"🔬", priority:4, group:"Esthétique Médicale" },
-  { id:"laser",         label:"Laser",              labelAr:"ليزر",            icon:"⚡", priority:4, group:"Esthétique Médicale" },
-  { id:"botox",         label:"Botox / Fillers",    labelAr:"بوتوكس",          icon:"✨", priority:4, group:"Esthétique Médicale" },
-  { id:"massage",       label:"Massage",            labelAr:"مساج",            icon:"💆", priority:5, group:"Bien-être & Soins" },
-  { id:"spa",           label:"Spa / Hammam",       labelAr:"سبا وحمام",       icon:"🛁", priority:5, group:"Bien-être & Soins" },
-  { id:"yoga",          label:"Yoga",               labelAr:"يوغا",            icon:"🧘", priority:5, group:"Bien-être & Soins" },
-  { id:"dietetique",    label:"Diététicien",        labelAr:"أخصائي تغذية",    icon:"🥗", priority:5, group:"Bien-être & Soins" },
-  { id:"osteo",         label:"Ostéopathe",         labelAr:"معالج عظام",      icon:"🦷", priority:5, group:"Bien-être & Soins" },
-  { id:"coach",         label:"Coach Sportif",      labelAr:"مدرب رياضي",      icon:"🏋️", priority:6, group:"Sport & Fitness" },
-  { id:"sallesport",    label:"Salle de Sport",     labelAr:"نادي رياضي",      icon:"💪", priority:6, group:"Sport & Fitness" },
-  { id:"piscine",       label:"Piscine",            labelAr:"مسبح",            icon:"🏊", priority:6, group:"Sport & Fitness" },
-  { id:"tennis",        label:"Tennis / Padel",     labelAr:"تنس",             icon:"🎾", priority:6, group:"Sport & Fitness" },
-  { id:"artsmartiaux",  label:"Arts Martiaux",      labelAr:"فنون قتالية",     icon:"🥋", priority:6, group:"Sport & Fitness" },
-  { id:"cours",         label:"Cours Particuliers", labelAr:"دروس خصوصية",     icon:"📚", priority:7, group:"Cours & Formation" },
-  { id:"langues",       label:"Langues",            labelAr:"لغات",            icon:"🌍", priority:7, group:"Cours & Formation" },
-  { id:"autoecole",     label:"Auto-École",         labelAr:"مدرسة قيادة",     icon:"🚗", priority:7, group:"Cours & Formation" },
-  { id:"musique",       label:"Musique",            labelAr:"موسيقى",          icon:"🎵", priority:7, group:"Cours & Formation" },
-  { id:"informatique",  label:"Informatique",       labelAr:"إعلام آلي",       icon:"💻", priority:7, group:"Cours & Formation" },
-  { id:"restaurant",    label:"Restaurant",         labelAr:"مطعم",            icon:"🍽️", priority:8, group:"Restauration" },
-  { id:"traiteur",      label:"Traiteur",           labelAr:"خدمة ضيافة",      icon:"👨‍🍳", priority:8, group:"Restauration" },
-  { id:"cafe",          label:"Café / Salon de thé",labelAr:"مقهى",            icon:"☕", priority:8, group:"Restauration" },
-  { id:"photo",         label:"Photographe",        labelAr:"مصور",            icon:"📸", priority:9, group:"Événementiel" },
-  { id:"dj",            label:"DJ / Musicien",      labelAr:"دي جي",           icon:"🎧", priority:9, group:"Événementiel" },
-  { id:"sallefetes",    label:"Salle des Fêtes",    labelAr:"قاعة أفراح",      icon:"🎊", priority:9, group:"Événementiel" },
-  { id:"decorateur",    label:"Décorateur",         labelAr:"مزيّن",           icon:"🌺", priority:9, group:"Événementiel" },
-  { id:"taxi",          label:"Taxi",               labelAr:"تاكسي",           icon:"🚕", priority:10, group:"Transport" },
-  { id:"locationvoiture",label:"Location Voiture",  labelAr:"تأجير سيارة",     icon:"🚘", priority:10, group:"Transport" },
-  { id:"transfert",     label:"Transfert Aéroport", labelAr:"نقل مطار",        icon:"✈️", priority:10, group:"Transport" },
-  { id:"hotel",         label:"Hôtel",              labelAr:"فندق",            icon:"🏨", priority:11, group:"Hébergement" },
-  { id:"riad",          label:"Riad / Chalet",      labelAr:"رياض / شاليه",    icon:"🏡", priority:11, group:"Hébergement" },
-  { id:"locationvac",   label:"Location Vacances",  labelAr:"إيجار عطلة",      icon:"🏖️", priority:11, group:"Hébergement" },
-  { id:"plombier",      label:"Plombier",           labelAr:"سباك",            icon:"🔧", priority:12, group:"Services à domicile" },
-  { id:"electricien",   label:"Électricien",        labelAr:"كهربائي",         icon:"⚡", priority:12, group:"Services à domicile" },
-  { id:"clim",          label:"Climatisation",      labelAr:"تكييف",           icon:"❄️", priority:12, group:"Services à domicile" },
-  { id:"nettoyage",     label:"Nettoyage",          labelAr:"تنظيف",           icon:"🧹", priority:12, group:"Services à domicile" },
-  { id:"demenagement",  label:"Déménagement",       labelAr:"انتقال",          icon:"📦", priority:12, group:"Services à domicile" },
-  { id:"notaire",       label:"Notaire",            labelAr:"موثق",            icon:"📜", priority:13, group:"Administratif & Juridique" },
-  { id:"avocat",        label:"Avocat",             labelAr:"محامي",           icon:"⚖️", priority:13, group:"Administratif & Juridique" },
-  { id:"comptable",     label:"Comptable",          labelAr:"محاسب",           icon:"📊", priority:13, group:"Administratif & Juridique" },
-  { id:"architecte",    label:"Architecte",         labelAr:"مهندس معماري",    icon:"🏗️", priority:13, group:"Administratif & Juridique" },
-  { id:"traducteur",    label:"Traducteur",         labelAr:"مترجم",           icon:"🌐", priority:13, group:"Administratif & Juridique" },
-  { id:"toilettage",    label:"Toilettage",         labelAr:"تجميل حيوانات",   icon:"🐩", priority:14, group:"Animaux" },
-  { id:"petsitting",    label:"Pet-Sitting",        labelAr:"رعاية حيوانات",   icon:"🐾", priority:14, group:"Animaux" },
-  { id:"dressage",      label:"Dressage",           labelAr:"تدريب حيوانات",   icon:"🐕", priority:14, group:"Animaux" },
+  { id:"medecin",        label:"Médecin",           labelAr:"طبيب",            icon:"🩺", priority:1,  group:"Santé & Médical" },
+  { id:"dentiste",       label:"Dentiste",           labelAr:"طبيب أسنان",      icon:"🦷", priority:1,  group:"Santé & Médical" },
+  { id:"kine",           label:"Kiné",               labelAr:"معالج",           icon:"🦴", priority:1,  group:"Santé & Médical" },
+  { id:"specialiste",    label:"Spécialiste",        labelAr:"أخصائي",          icon:"🩻", priority:1,  group:"Santé & Médical" },
+  { id:"psy",            label:"Psychologue",        labelAr:"نفساني",          icon:"🧠", priority:1,  group:"Santé & Médical" },
+  { id:"optique",        label:"Opticien",           labelAr:"بصري",            icon:"👁", priority:1,  group:"Santé & Médical" },
+  { id:"veterinaire",    label:"Vétérinaire",        labelAr:"بيطري",           icon:"🐾", priority:1,  group:"Santé & Médical" },
+  { id:"coiffeur",       label:"Coiffeur",           labelAr:"حلاق",            icon:"💇", priority:2,  group:"Beauté & Coiffure" },
+  { id:"barbier",        label:"Barbier",            labelAr:"حلاق رجالي",      icon:"✂",  priority:2,  group:"Beauté & Coiffure" },
+  { id:"coloriste",      label:"Coloriste",          labelAr:"صبغة شعر",        icon:"🎨", priority:2,  group:"Beauté & Coiffure" },
+  { id:"estheticienne",  label:"Esthéticienne",      labelAr:"مختصة تجميل",     icon:"💅", priority:3,  group:"Esthétique" },
+  { id:"epilation",      label:"Épilation",          labelAr:"إزالة شعر",       icon:"🌸", priority:3,  group:"Esthétique" },
+  { id:"maquillage",     label:"Maquillage",         labelAr:"مكياج",           icon:"💄", priority:3,  group:"Esthétique" },
+  { id:"tatouage",       label:"Tatouage",           labelAr:"وشم",             icon:"🖊", priority:3,  group:"Esthétique" },
+  { id:"sourcils",       label:"Sourcils & Cils",    labelAr:"رموش وحواجب",     icon:"👁", priority:3,  group:"Esthétique" },
+  { id:"dermato",        label:"Dermatologue",       labelAr:"جلدي",            icon:"🔬", priority:4,  group:"Esthétique Médicale" },
+  { id:"laser",          label:"Laser",              labelAr:"ليزر",            icon:"⚡", priority:4,  group:"Esthétique Médicale" },
+  { id:"botox",          label:"Botox / Fillers",    labelAr:"بوتوكس",          icon:"✨", priority:4,  group:"Esthétique Médicale" },
+  { id:"massage",        label:"Massage",            labelAr:"مساج",            icon:"💆", priority:5,  group:"Bien-être & Soins" },
+  { id:"spa",            label:"Spa / Hammam",       labelAr:"سبا وحمام",       icon:"🛁", priority:5,  group:"Bien-être & Soins" },
+  { id:"yoga",           label:"Yoga",               labelAr:"يوغا",            icon:"🧘", priority:5,  group:"Bien-être & Soins" },
+  { id:"dietetique",     label:"Diététicien",        labelAr:"أخصائي تغذية",    icon:"🥗", priority:5,  group:"Bien-être & Soins" },
+  { id:"osteo",          label:"Ostéopathe",         labelAr:"معالج عظام",      icon:"🦷", priority:5,  group:"Bien-être & Soins" },
+  { id:"coach",          label:"Coach Sportif",      labelAr:"مدرب رياضي",      icon:"🏋", priority:6,  group:"Sport & Fitness" },
+  { id:"sallesport",     label:"Salle de Sport",     labelAr:"نادي رياضي",      icon:"💪", priority:6,  group:"Sport & Fitness" },
+  { id:"piscine",        label:"Piscine",            labelAr:"مسبح",            icon:"🏊", priority:6,  group:"Sport & Fitness" },
+  { id:"tennis",         label:"Tennis / Padel",     labelAr:"تنس",             icon:"🎾", priority:6,  group:"Sport & Fitness" },
+  { id:"artsmartiaux",   label:"Arts Martiaux",      labelAr:"فنون قتالية",     icon:"🥋", priority:6,  group:"Sport & Fitness" },
+  { id:"cours",          label:"Cours Particuliers", labelAr:"دروس خصوصية",     icon:"📚", priority:7,  group:"Cours & Formation" },
+  { id:"langues",        label:"Langues",            labelAr:"لغات",            icon:"🌍", priority:7,  group:"Cours & Formation" },
+  { id:"autoecole",      label:"Auto-École",         labelAr:"مدرسة قيادة",     icon:"🚗", priority:7,  group:"Cours & Formation" },
+  { id:"musique",        label:"Musique",            labelAr:"موسيقى",          icon:"🎵", priority:7,  group:"Cours & Formation" },
+  { id:"informatique",   label:"Informatique",       labelAr:"إعلام آلي",       icon:"💻", priority:7,  group:"Cours & Formation" },
+  { id:"restaurant",     label:"Restaurant",         labelAr:"مطعم",            icon:"🍽", priority:8,  group:"Restauration" },
+  { id:"traiteur",       label:"Traiteur",           labelAr:"خدمة ضيافة",      icon:"🍳", priority:8,  group:"Restauration" },
+  { id:"cafe",           label:"Café / Salon de thé",labelAr:"مقهى",            icon:"☕", priority:8,  group:"Restauration" },
+  { id:"photo",          label:"Photographe",        labelAr:"مصور",            icon:"📸", priority:9,  group:"Événementiel" },
+  { id:"dj",             label:"DJ / Musicien",      labelAr:"دي جي",           icon:"🎧", priority:9,  group:"Événementiel" },
+  { id:"sallefetes",     label:"Salle des Fêtes",    labelAr:"قاعة أفراح",      icon:"🎊", priority:9,  group:"Événementiel" },
+  { id:"decorateur",     label:"Décorateur",         labelAr:"مزيّن",           icon:"🌺", priority:9,  group:"Événementiel" },
+  { id:"taxi",           label:"Taxi",               labelAr:"تاكسي",           icon:"🚕", priority:10, group:"Transport" },
+  { id:"locationvoiture",label:"Location Voiture",   labelAr:"تأجير سيارة",     icon:"🚘", priority:10, group:"Transport" },
+  { id:"transfert",      label:"Transfert Aéroport", labelAr:"نقل مطار",        icon:"✈", priority:10, group:"Transport" },
+  { id:"hotel",          label:"Hôtel",              labelAr:"فندق",            icon:"🏨", priority:11, group:"Hébergement" },
+  { id:"riad",           label:"Riad / Chalet",      labelAr:"رياض / شاليه",    icon:"🏡", priority:11, group:"Hébergement" },
+  { id:"locationvac",    label:"Location Vacances",  labelAr:"إيجار عطلة",      icon:"🏖", priority:11, group:"Hébergement" },
+  { id:"plombier",       label:"Plombier",           labelAr:"سباك",            icon:"🔧", priority:12, group:"Services à domicile" },
+  { id:"electricien",    label:"Électricien",        labelAr:"كهربائي",         icon:"⚡", priority:12, group:"Services à domicile" },
+  { id:"clim",           label:"Climatisation",      labelAr:"تكييف",           icon:"❄", priority:12, group:"Services à domicile" },
+  { id:"nettoyage",      label:"Nettoyage",          labelAr:"تنظيف",           icon:"🧹", priority:12, group:"Services à domicile" },
+  { id:"demenagement",   label:"Déménagement",       labelAr:"انتقال",          icon:"📦", priority:12, group:"Services à domicile" },
+  { id:"notaire",        label:"Notaire",            labelAr:"موثق",            icon:"📜", priority:13, group:"Administratif & Juridique" },
+  { id:"avocat",         label:"Avocat",             labelAr:"محامي",           icon:"⚖", priority:13, group:"Administratif & Juridique" },
+  { id:"comptable",      label:"Comptable",          labelAr:"محاسب",           icon:"📊", priority:13, group:"Administratif & Juridique" },
+  { id:"architecte",     label:"Architecte",         labelAr:"مهندس معماري",    icon:"🏗", priority:13, group:"Administratif & Juridique" },
+  { id:"traducteur",     label:"Traducteur",         labelAr:"مترجم",           icon:"🌐", priority:13, group:"Administratif & Juridique" },
+  { id:"toilettage",     label:"Toilettage",         labelAr:"تجميل حيوانات",   icon:"🐩", priority:14, group:"Animaux" },
+  { id:"petsitting",     label:"Pet-Sitting",        labelAr:"رعاية حيوانات",   icon:"🐾", priority:14, group:"Animaux" },
+  { id:"dressage",       label:"Dressage",           labelAr:"تدريب حيوانات",   icon:"🐕", priority:14, group:"Animaux" },
 ];
 
-const GROUPS   = [...new Set(CATEGORIES.map(c => c.group))];
-const DAYS_FR  = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-const DAYS_AR  = ["أحد","اثن","ثلا","أرب","خمي","جمع","سبت"];
-const CITIES   = ["Toutes villes","Oran","Alger","Constantine","Annaba","Tizi Ouzou","Sétif","Blida"];
+const GROUPS    = [...new Set(CATEGORIES.map(c => c.group))];
+const DAYS_FR   = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+const DAYS_AR   = ["أحد","اثن","ثلا","أرب","خمي","جمع","سبت"];
+const CITIES    = ["Toutes villes","Oran","Alger","Constantine","Annaba","Tizi Ouzou","Sétif","Blida"];
 const TIME_SLOTS = ["09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
 
 // ─── OFFRES PARTENAIRES ───────────────────────────────────────────────────────
-// Pour ajouter une offre : copie un bloc { } et modifie les valeurs
 const PARTNER_OFFERS = [
-  {
-    id: 1,
-    emoji: "🍽️",
-    name: "Restaurant El Bahia",
-    category: "Restaurant · Oran Centre",
-    promoTag: "-15%",
-    offerTitle: "Réduction de 15% ce weekend sur tous les menus",
-    offerSub: "Offre valable sam & dim · 50 places restantes",
-    bgColor: "#1A1A2E",
-    bgColor2: "#0F3460",
-    professionalId: null, // mettre l'ID Supabase du pro ici plus tard
-  },
-  {
-    id: 2,
-    emoji: "💇",
-    name: "Salon Prestige Oran",
-    category: "Coiffure & Beauté · Bir El Djir",
-    promoTag: "Offre spéciale",
-    offerTitle: "Coupe + soin offert pour toute réservation via Blasty",
-    offerSub: "Valable toute la semaine · 20 créneaux disponibles",
-    bgColor: "#1A2E1A",
-    bgColor2: "#0D3B0D",
-    professionalId: null,
-  },
-  {
-    id: 3,
-    emoji: "🏨",
-    name: "Hôtel Les Falaises",
-    category: "Hôtel 4★ · Front de Mer Oran",
-    promoTag: "-20%",
-    offerTitle: "20% de réduction sur les chambres du weekend",
-    offerSub: "Check-in ven–dim · Petit-déjeuner inclus",
-    bgColor: "#2E1A1A",
-    bgColor2: "#3B0D0D",
-    professionalId: null,
-  },
+  { id:1, emoji:"🍽", name:"Restaurant El Bahia",  category:"Restaurant · Oran Centre",       promoTag:"-15%",        offerTitle:"Réduction de 15% ce weekend sur tous les menus",         offerSub:"Offre valable sam & dim · 50 places restantes",    bgColor:"#1A1A2E", bgColor2:"#0F3460" },
+  { id:2, emoji:"💇", name:"Salon Prestige Oran",  category:"Coiffure & Beauté · Bir El Djir", promoTag:"Offre spéciale", offerTitle:"Coupe + soin offert pour toute réservation via Blasty", offerSub:"Valable toute la semaine · 20 créneaux dispo",     bgColor:"#1A2E1A", bgColor2:"#0D3B0D" },
+  { id:3, emoji:"🏨", name:"Hotel Les Falaises",   category:"Hotel 4 etoiles · Front de Mer",  promoTag:"-20%",        offerTitle:"20% de réduction sur les chambres du weekend",           offerSub:"Check-in ven-dim · Petit-déjeuner inclus",         bgColor:"#2E1A1A", bgColor2:"#3B0D0D" },
 ];
 
-// ─── COMPOSANT BANNIÈRE PARTENAIRE ────────────────────────────────────────────
 function PartnerBanner({ isAr, onBook }) {
   const [current, setCurrent] = useState(0);
-
-  // Rotation automatique toutes les 4 secondes
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % PARTNER_OFFERS.length);
-    }, 4000);
-    return () => clearInterval(timer); // nettoyage quand le composant disparaît
+    const timer = setInterval(() => { setCurrent(prev => (prev + 1) % PARTNER_OFFERS.length); }, 4000);
+    return () => clearInterval(timer);
   }, []);
-
-  const offer = PARTNER_OFFERS[current];
-
+  const o = PARTNER_OFFERS[current];
   return (
-    <div style={{ marginBottom: 20 }}>
-
-      {/* Titre de la section */}
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.dark, marginBottom: 12 }}>
-        {isAr ? "⭐ عروض الشركاء" : "⭐ Offres partenaires"}
+    <div style={{ margin:"18px 20px 4px" }}>
+      <div style={{ fontSize:16, fontWeight:800, color:C.dark, marginBottom:12 }}>
+        {isAr ? "عروض الشركاء" : "Offres partenaires"}
       </div>
-
-      {/* La carte principale */}
-      <div style={{
-        borderRadius: 22,
-        overflow: "hidden",
-        border: "2px solid #E8B84B",
-        background: C.white,
-        boxShadow: "0 4px 20px rgba(232,184,75,0.25)",
-      }}>
-
-        {/* Partie haute colorée */}
-        <div style={{
-          background: `linear-gradient(135deg, ${offer.bgColor} 0%, ${offer.bgColor2} 100%)`,
-          padding: "16px 16px 14px",
-        }}>
-          {/* Badge "Offre Partenaire" */}
-          <div style={{
-            display: "inline-block",
-            background: "#E8B84B",
-            color: "#7A5700",
-            fontSize: 11,
-            fontWeight: 700,
-            padding: "3px 12px",
-            borderRadius: 20,
-            marginBottom: 12,
-          }}>
-            ⭐ {isAr ? "عرض شريك" : "Offre Partenaire"}
+      <div style={{ borderRadius:22, overflow:"hidden", border:"2px solid #E8B84B", background:C.white, boxShadow:"0 4px 20px rgba(232,184,75,0.2)" }}>
+        <div style={{ background:"linear-gradient(135deg," + o.bgColor + " 0%," + o.bgColor2 + " 100%)", padding:"16px 16px 14px" }}>
+          <div style={{ display:"inline-block", background:"#E8B84B", color:"#7A5700", fontSize:11, fontWeight:700, padding:"3px 12px", borderRadius:20, marginBottom:12 }}>
+            {isAr ? "عرض شريك" : "Offre Partenaire"}
           </div>
-
-          {/* Logo + nom + tag promo */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{
-              width: 50, height: 50, borderRadius: 14,
-              background: "rgba(255,255,255,0.95)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 26, flexShrink: 0,
-            }}>
-              {offer.emoji}
+          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+            <div style={{ width:50, height:50, borderRadius:14, background:"rgba(255,255,255,0.95)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0 }}>{o.emoji}</div>
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:15, fontWeight:800, color:"#fff" }}>{o.name}</div>
+              <div style={{ fontSize:12, color:"rgba(255,255,255,0.7)", marginTop:2 }}>{o.category}</div>
             </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>{offer.name}</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", marginTop: 2 }}>{offer.category}</div>
-            </div>
-            <div style={{
-              background: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.3)",
-              color: "#fff",
-              fontSize: 13, fontWeight: 800,
-              padding: "5px 12px", borderRadius: 10,
-              flexShrink: 0,
-            }}>
-              {offer.promoTag}
-            </div>
+            <div style={{ background:"rgba(255,255,255,0.15)", border:"1px solid rgba(255,255,255,0.3)", color:"#fff", fontSize:13, fontWeight:800, padding:"5px 12px", borderRadius:10 }}>{o.promoTag}</div>
           </div>
         </div>
-
-        {/* Partie basse blanche */}
-        <div style={{
-          padding: "14px 16px",
-          display: "flex", alignItems: "center",
-          justifyContent: "space-between", gap: 12,
-        }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: C.dark }}>{offer.offerTitle}</div>
-            <div style={{ fontSize: 11, color: C.muted, marginTop: 3 }}>{offer.offerSub}</div>
+        <div style={{ padding:"14px 16px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:12 }}>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:13, fontWeight:700, color:C.dark }}>{o.offerTitle}</div>
+            <div style={{ fontSize:11, color:C.muted, marginTop:3 }}>{o.offerSub}</div>
           </div>
-          <button
-            onClick={() => onBook && onBook(offer)}
-            style={{
-              background: `linear-gradient(135deg, ${C.blue}, ${C.blueDark})`,
-              color: C.white, border: "none",
-              borderRadius: 14, padding: "10px 18px",
-              fontSize: 13, fontWeight: 800,
-              cursor: "pointer", fontFamily: "inherit",
-              flexShrink: 0,
-              boxShadow: `0 4px 14px ${C.blueGlow}`,
-            }}
-          >
+          <button onClick={() => onBook && onBook(o)} style={{ background:"linear-gradient(135deg," + C.blue + "," + C.blueDark + ")", color:C.white, border:"none", borderRadius:14, padding:"10px 18px", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:"inherit", flexShrink:0 }}>
             {isAr ? "احجز" : "Réserver"}
           </button>
         </div>
       </div>
-
-      {/* Points de navigation (•••) */}
-      <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 10 }}>
-        {PARTNER_OFFERS.map((_, i) => (
-          <div
-            key={i}
-            onClick={() => setCurrent(i)}
-            style={{
-              width: i === current ? 20 : 6,
-              height: 6,
-              borderRadius: 3,
-              background: i === current ? C.blue : C.border,
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-            }}
-          />
+      <div style={{ display:"flex", gap:5, justifyContent:"center", marginTop:10 }}>
+        {PARTNER_OFFERS.map((_,i) => (
+          <div key={i} onClick={() => setCurrent(i)} style={{ width:i===current?20:6, height:6, borderRadius:3, background:i===current?C.blue:C.border, cursor:"pointer", transition:"all 0.3s" }} />
         ))}
       </div>
     </div>
@@ -273,10 +155,10 @@ function PartnerBanner({ isAr, onBook }) {
 
 function getTodayLabel(isAr) {
   const now = new Date();
-  const daysFR  = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
-  const daysAR  = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-  const moisFR  = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-  const moisAR  = ["يناير","فبراير","مارس","أبريل","ماي","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+  const daysFR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+  const daysAR = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  const moisFR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+  const moisAR = ["يناير","فبراير","مارس","أبريل","ماي","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
   if (isAr) return `${daysAR[now.getDay()]} ${now.getDate()} ${moisAR[now.getMonth()]} ${now.getFullYear()}`;
   return `${daysFR[now.getDay()]} ${now.getDate()} ${moisFR[now.getMonth()]} ${now.getFullYear()}`;
 }
@@ -290,7 +172,6 @@ function getDates(isAr) {
 
 function getCat(id) { return CATEGORIES.find(c=>c.id===id)||{}; }
 
-// ─── SHARED UI ────────────────────────────────────────────────────────────────
 const GradHeader = ({ children }) => (
   <div style={{ background:`linear-gradient(155deg,${C.blue} 0%,${C.blueDark} 60%,${C.blueDeep} 100%)`, padding:"52px 20px 32px", position:"relative", overflow:"hidden" }}>
     <div style={{ position:"absolute", top:-50, right:-50, width:180, height:180, borderRadius:"50%", background:"rgba(255,255,255,.05)" }} />
@@ -338,7 +219,6 @@ const Loader = () => (
   </div>
 );
 
-// ─── SPLASH ───────────────────────────────────────────────────────────────────
 function SplashScreen({ onGo }) {
   return (
     <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.blue},${C.blueDeep})`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:40, position:"relative", overflow:"hidden" }}>
@@ -349,7 +229,7 @@ function SplashScreen({ onGo }) {
       <div style={{ fontSize:44, fontWeight:900, color:C.white, letterSpacing:-1, marginBottom:6 }}>{BRAND}</div>
       <div style={{ fontSize:15, color:"rgba(255,255,255,.8)", textAlign:"center", lineHeight:1.8, marginBottom:10 }}>Réservez en quelques secondes.</div>
       <div style={{ display:"flex", flexWrap:"wrap", justifyContent:"center", gap:8, marginBottom:36, marginTop:6 }}>
-        {["🩺 Santé","💇 Beauté","💅 Esthétique","💆 Bien-être","🍽️ Resto","🏨 Hôtel","🚕 Taxi","📸 Photo"].map(lb=>(
+        {["🩺 Santé","💇 Beauté","💅 Esthétique","💆 Bien-être","🍽 Resto","🏨 Hôtel","🚕 Taxi","📸 Photo"].map(lb=>(
           <span key={lb} style={{ background:"rgba(255,255,255,.15)", color:C.white, borderRadius:20, padding:"5px 12px", fontSize:12, fontWeight:600, backdropFilter:"blur(4px)" }}>{lb}</span>
         ))}
       </div>
@@ -357,22 +237,21 @@ function SplashScreen({ onGo }) {
         <button onClick={()=>onGo("login")} style={{ background:"rgba(255,255,255,.95)", color:C.blue, border:"none", borderRadius:18, padding:"17px", fontSize:16, fontWeight:900, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 8px 24px rgba(0,0,0,.2)" }}>Se connecter</button>
         <button onClick={()=>onGo("register")} style={{ background:"transparent", color:C.white, border:"2px solid rgba(255,255,255,.5)", borderRadius:18, padding:"16px", fontSize:15, fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>Créer un compte</button>
       </div>
-      <div style={{ fontSize:12, color:"rgba(255,255,255,.5)", marginTop:24 }}>🇩🇿 Fait à Oran avec ❤️ · {BRAND} v1.0</div>
+      <div style={{ fontSize:12, color:"rgba(255,255,255,.5)", marginTop:24 }}>🇩🇿 Fait à Oran avec amour · {BRAND} v1.0</div>
     </div>
   );
 }
 
-// ─── AUTH ─────────────────────────────────────────────────────────────────────
 function AuthScreen({ mode, onAuth, onSwitch }) {
-  const params      = new URLSearchParams(window.location.search);
-  const initRole    = params.get("role") === "pro" ? "professionnel" : "client";
+  const params   = new URLSearchParams(window.location.search);
+  const initRole = params.get("role") === "pro" ? "professionnel" : "client";
   const [form,setForm]       = useState({ name:"", phone:"", password:"", role:initRole, category_id:"", city:"Oran" });
   const [loading,setLoading] = useState(false);
   const [error,setError]     = useState("");
   const [otpStep,setOtpStep] = useState(false);
   const [otpCode,setOtpCode] = useState("");
   const isLogin = mode==="login";
-  const SERVER  = "https://blasty-production.up.railway.app";
+  const SERVER  = "http://localhost:3001";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
   const formatPhone = (p) => {
@@ -394,7 +273,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const data  = await res.json();
       if (data.success) { setOtpStep(true); }
       else setError("Erreur envoi SMS : " + (data.error||""));
-    } catch(e) { setError("Serveur OTP inaccessible."); }
+    } catch(e) { setError("Serveur OTP inaccessible. Vérifiez que node index.js tourne."); }
     setLoading(false);
   };
 
@@ -407,7 +286,6 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const res   = await fetch(`${SERVER}/verify-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone, code:otpCode }) });
       const check = await res.json();
       if (!check.success) { setError("Code incorrect ou expiré."); setLoading(false); return; }
-
       if (isLogin) {
         const { data, error: err } = await supabase.from("users").select("*").eq("phone", form.phone).single();
         if (err || !data) { setError("Numéro introuvable. Créez un compte."); setLoading(false); return; }
@@ -418,7 +296,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
         if (form.role === "professionnel") {
           const cat = getCat(form.category_id);
           await supabase.from("professionals").insert({
-            user_id:data.id, name:form.name, phone:form.phone, city:form.city,
+            user_id:form.id, name:form.name, phone:form.phone, city:form.city,
             category_id:form.category_id, speciality:cat.label||"",
             active:true, rating:5.0, reviews_count:0, plan:"starter",
             next_available:"Disponible", price:"Sur devis",
@@ -488,12 +366,9 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
           <input style={inp} placeholder="••••••••" type="password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
         </div>
         {error && <div style={{ background:"#FEE2E2", color:"#B91C1C", borderRadius:12, padding:"10px 14px", fontSize:13, marginBottom:16 }}>⚠️ {error}</div>}
-
         {!otpStep ? (
           <>
-            <PrimaryBtn onClick={handleSendOtp} disabled={loading}>
-              {loading?"⏳ Envoi SMS...":"📱 Recevoir le code SMS →"}
-            </PrimaryBtn>
+            <PrimaryBtn onClick={handleSendOtp} disabled={loading}>{loading?"⏳ Envoi SMS...":"📱 Recevoir le code SMS →"}</PrimaryBtn>
             <div style={{ textAlign:"center", marginTop:20, fontSize:14, color:C.muted }}>
               {isLogin?"Pas encore de compte ? ":"Déjà un compte ? "}
               <span style={{ color:C.blue, fontWeight:700, cursor:"pointer" }} onClick={onSwitch}>{isLogin?"S'inscrire":"Se connecter"}</span>
@@ -507,17 +382,9 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
             </div>
             <div style={{ marginBottom:20 }}>
               <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>Code de vérification</label>
-              <input
-                style={{ ...inp, fontSize:28, fontWeight:900, textAlign:"center", letterSpacing:12 }}
-                placeholder="------"
-                maxLength={6}
-                value={otpCode}
-                onChange={e=>setOtpCode(e.target.value.replace(/\D/g,""))}
-              />
+              <input style={{ ...inp, fontSize:28, fontWeight:900, textAlign:"center", letterSpacing:12 }} placeholder="------" maxLength={6} value={otpCode} onChange={e=>setOtpCode(e.target.value.replace(/\D/g,""))} />
             </div>
-            <PrimaryBtn onClick={handleVerifyOtp} disabled={loading}>
-              {loading?"⏳ Vérification...":"✓ Valider le code →"}
-            </PrimaryBtn>
+            <PrimaryBtn onClick={handleVerifyOtp} disabled={loading}>{loading?"⏳ Vérification...":"✓ Valider le code →"}</PrimaryBtn>
             <button onClick={()=>{setOtpStep(false);setOtpCode("");setError("");}} style={{ background:"transparent", border:"none", color:C.muted, fontSize:13, cursor:"pointer", fontFamily:"inherit", width:"100%", marginTop:14, textAlign:"center" }}>
               ← Modifier mon numéro
             </button>
@@ -529,7 +396,6 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   );
 }
 
-// ─── HOME ─────────────────────────────────────────────────────────────────────
 function HomeScreen({ user, isAr, lang, setLang, onBook }) {
   const [search,   setSearch]   = useState("");
   const [selCat,   setSelCat]   = useState(null);
@@ -549,7 +415,7 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
     fetchPros();
   }, []);
 
-  const topCats = CATEGORIES.filter(c=>c.priority<=5);
+  const topCats  = CATEGORIES.filter(c=>c.priority<=5);
   const filtered = pros.filter(p => {
     const cat = getCat(p.category_id);
     const matchCat    = !selCat   || p.category_id===selCat;
@@ -590,13 +456,8 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
         ))}
       </div>
 
-      {/* ───── BANNIÈRE PARTENAIRE ici ───── */}
-      <div style={{ padding:"18px 20px 0" }}>
-        <PartnerBanner isAr={isAr} onBook={(offer) => {
-          // Pour l'instant : alerte simple. Plus tard : navigate vers la fiche pro
-          alert(`Redirection vers ${offer.name} — connecte l'ID Supabase dans PARTNER_OFFERS`);
-        }} />
-      </div>
+      {/* ── BANNIÈRE PARTENAIRE ── */}
+      <PartnerBanner isAr={isAr} onBook={(o) => alert("Bientôt : " + o.name)} />
 
       <div style={{ padding:"0 20px 0" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
@@ -696,7 +557,6 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
   );
 }
 
-// ─── BOOKING ──────────────────────────────────────────────────────────────────
 function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
   const [date,    setDate]    = useState(null);
   const [time,    setTime]    = useState(null);
@@ -788,7 +648,6 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
   );
 }
 
-// ─── SUCCESS ──────────────────────────────────────────────────────────────────
 function SuccessScreen({ booking, isAr, onHome }) {
   const cat = getCat(booking.pro.category_id);
   return (
@@ -812,7 +671,6 @@ function SuccessScreen({ booking, isAr, onHome }) {
   );
 }
 
-// ─── MY BOOKINGS ──────────────────────────────────────────────────────────────
 function MyBookingsScreen({ user, isAr }) {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -861,7 +719,6 @@ function MyBookingsScreen({ user, isAr }) {
   );
 }
 
-// ─── PRO DASHBOARD COMPLET ────────────────────────────────────────────────────
 function ProDashboard({ user, isAr }) {
   const [activeTab, setActiveTab] = useState("stats");
   const [rdvs,      setRdvs]      = useState([]);
@@ -876,20 +733,14 @@ function ProDashboard({ user, isAr }) {
       const { data:proData } = await supabase.from("professionals").select("*").eq("user_id", user.id).single();
       if (proData) {
         setProInfo(proData);
-        setProForm({
-          name:        proData.name        || "",
-          speciality:  proData.speciality  || "",
-          phone:       proData.phone       || user.phone || "",
-          address:     proData.address     || "",
-          description: proData.description || "",
-        });
+        setProForm({ name:proData.name||"", speciality:proData.speciality||"", phone:proData.phone||user.phone||"", address:proData.address||"", description:proData.description||"" });
         const { data:rdvData } = await supabase.from("reservations").select("*").eq("professional_id", proData.id).order("created_at", { ascending:false });
         if (rdvData) setRdvs(rdvData);
       }
       setLoading(false);
     };
-    fetchData();
-  }, [user.id]);
+    fetchData(); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const saveProfile = async () => {
     if (!proInfo) return;
@@ -908,17 +759,13 @@ function ProDashboard({ user, isAr }) {
   const cancelled  = rdvs.filter(r=>r.status==="cancelled").length;
   const todayStr   = new Date().toLocaleDateString("fr-DZ");
   const todayRdvs  = rdvs.filter(r=>r.date===todayStr);
-
   const clientsMap = {};
   rdvs.forEach(r => { if (!clientsMap[r.client_phone]) clientsMap[r.client_phone] = { name:r.client_name, phone:r.client_phone, count:0, last:r.date }; clientsMap[r.client_phone].count++; });
-  const clients = Object.values(clientsMap);
-
+  const clients    = Object.values(clientsMap);
   const currentPlan = PLANS.find(p=>p.id===proInfo?.plan) || PLANS[1];
-  const rdvUsed = rdvs.filter(r=>{ const d=new Date(r.created_at||Date.now()); const now=new Date(); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
-
-  const tabStyle = (t) => ({ flex:1, padding:"10px 6px", textAlign:"center", fontSize:12, fontWeight:activeTab===t?800:500, color:activeTab===t?C.blue:C.muted, borderBottom:`2px solid ${activeTab===t?C.blue:"transparent"}`, cursor:"pointer", background:"transparent", border:"none", borderBottomWidth:2, borderBottomStyle:"solid", borderBottomColor:activeTab===t?C.blue:"transparent", fontFamily:"inherit" });
-
-  const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"12px 14px", fontSize:13, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text, marginTop:4 };
+  const rdvUsed    = rdvs.filter(r=>{ const d=new Date(r.created_at||Date.now()); const now=new Date(); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
+  const tabStyle   = (t) => ({ flex:1, padding:"10px 6px", textAlign:"center", fontSize:12, fontWeight:activeTab===t?800:500, color:activeTab===t?C.blue:C.muted, borderBottom:`2px solid ${activeTab===t?C.blue:"transparent"}`, cursor:"pointer", background:"transparent", border:"none", borderBottomWidth:2, borderBottomStyle:"solid", borderBottomColor:activeTab===t?C.blue:"transparent", fontFamily:"inherit" });
+  const inp        = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"12px 14px", fontSize:13, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text, marginTop:4 };
 
   return (
     <div style={{ paddingBottom:90 }}>
@@ -931,19 +778,12 @@ function ProDashboard({ user, isAr }) {
             <div style={{ fontSize:13, color:"rgba(255,255,255,.8)" }}>{proInfo?.speciality||""} · {isAr?"أوران":"Oran"}</div>
           </div>
           <div style={{ textAlign:"right" }}>
-            <div style={{ background:"rgba(255,255,255,.2)", borderRadius:12, padding:"6px 12px", fontSize:12, color:C.white, fontWeight:700 }}>
-              {currentPlan.icon} {currentPlan.name}
-            </div>
+            <div style={{ background:"rgba(255,255,255,.2)", borderRadius:12, padding:"6px 12px", fontSize:12, color:C.white, fontWeight:700 }}>{currentPlan.icon} {currentPlan.name}</div>
             <div style={{ fontSize:11, color:"rgba(255,255,255,.7)", marginTop:4 }}>{rdvUsed}/{currentPlan.rdv} RDV</div>
           </div>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, marginTop:16 }}>
-          {[
-            [String(rdvs.length), isAr?"إجمالي":"Total", C.blue],
-            [String(confirmed),   isAr?"مؤكد":"Confirmés", C.success],
-            [String(pending),     isAr?"انتظار":"Attente", C.warn],
-            [String(todayRdvs.length), isAr?"اليوم":"Auj.", "#9B59B6"],
-          ].map(([n,l,color])=>(
+          {[[String(rdvs.length),isAr?"إجمالي":"Total",C.blue],[String(confirmed),isAr?"مؤكد":"Confirmés",C.success],[String(pending),isAr?"انتظار":"Attente",C.warn],[String(todayRdvs.length),isAr?"اليوم":"Auj.","#9B59B6"]].map(([n,l,color])=>(
             <div key={l} style={{ background:"rgba(255,255,255,.15)", borderRadius:14, padding:"10px 8px", textAlign:"center", backdropFilter:"blur(4px)" }}>
               <div style={{ fontSize:20, fontWeight:900, color:C.white }}>{n}</div>
               <div style={{ fontSize:10, color:"rgba(255,255,255,.8)", marginTop:2 }}>{l}</div>
@@ -960,7 +800,6 @@ function ProDashboard({ user, isAr }) {
       </div>
 
       <div style={{ padding:"16px 20px" }}>
-
         {activeTab==="stats" && (
           <>
             <Card style={{ padding:"14px 16px" }}>
@@ -973,7 +812,6 @@ function ProDashboard({ user, isAr }) {
               </div>
               <div style={{ fontSize:11, color:C.muted, marginTop:6 }}>{currentPlan.icon} Plan {currentPlan.name} · {currentPlan.price.toLocaleString("fr-DZ")} DA/mois</div>
             </Card>
-
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10, marginBottom:14 }}>
               {[[confirmed,isAr?"مؤكدة":"Confirmés",C.success,C.successBg],[pending,isAr?"انتظار":"En attente",C.warn,C.warnBg],[cancelled,isAr?"ملغاة":"Annulés","#B91C1C","#FEE2E2"]].map(([n,l,color,bg])=>(
                 <div key={l} style={{ background:bg, borderRadius:16, padding:"14px 10px", textAlign:"center" }}>
@@ -982,14 +820,9 @@ function ProDashboard({ user, isAr }) {
                 </div>
               ))}
             </div>
-
-            <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:10 }}>
-              📅 {isAr?"مواعيد اليوم":"Aujourd'hui"} — {getTodayLabel(isAr)}
-            </div>
+            <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:10 }}>📅 {isAr?"مواعيد اليوم":"Aujourd'hui"} — {getTodayLabel(isAr)}</div>
             {loading ? <Loader /> : todayRdvs.length===0 ? (
-              <div style={{ textAlign:"center", padding:30, color:C.muted, fontSize:13 }}>
-                {isAr?"لا مواعيد اليوم":"Aucun RDV aujourd'hui"}
-              </div>
+              <div style={{ textAlign:"center", padding:30, color:C.muted, fontSize:13 }}>{isAr?"لا مواعيد اليوم":"Aucun RDV aujourd'hui"}</div>
             ) : todayRdvs.map((r,i)=>(
               <Card key={i} style={{ padding:"12px 14px" }}>
                 <div style={{ display:"flex", alignItems:"center", gap:10 }}>
@@ -1002,8 +835,71 @@ function ProDashboard({ user, isAr }) {
                 </div>
               </Card>
             ))}
-
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, margin:"20px 0 12px" }}>{isAr?"خطط الاشتراك":"Abonnements"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
               {PLANS.map(plan=>(
-                <div key={plan.id} style={{ background:plan.popular?C.blueBg:C.white, border:`${plan.id===currentPlan.id?"2px":"1px"} solid ${plan.id===currentPlan.id?C.blue:C.border}`, borderRadius:18
+                <div key={plan.id} style={{ background:plan.popular?C.blueBg:C.white, border:`${plan.id===currentPlan.id?"2px":"1px"} solid ${plan.id===currentPlan.id?C.blue:C.border}`, borderRadius:18, padding:"14px", position:"relative" }}>
+                  {plan.popular && <div style={{ position:"absolute", top:-9, left:"50%", transform:"translateX(-50%)", background:C.blue, color:C.white, fontSize:9, fontWeight:800, padding:"2px 8px", borderRadius:20, whiteSpace:"nowrap" }}>{isAr?"الأشهر":"Populaire"}</div>}
+                  <div style={{ fontSize:18 }}>{plan.icon}</div>
+                  <div style={{ fontSize:13, fontWeight:800, color:C.dark, marginTop:4 }}>{plan.name}</div>
+                  <div style={{ fontSize:16, fontWeight:900, color:C.blue }}>{plan.price.toLocaleString("fr-DZ")} <span style={{ fontSize:10, color:C.muted }}>DA/mois</span></div>
+                  <div style={{ fontSize:10, color:C.muted, marginTop:4 }}>✓ {plan.rdv} RDV · {plan.sms} SMS</div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {activeTab==="agenda" && (
+          <>
+            <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>📋 {isAr?"جميع المواعيد":"Tous les rendez-vous"} ({rdvs.length})</div>
+            {loading ? <Loader /> : rdvs.length===0 ? (
+              <div style={{ textAlign:"center", padding:50, color:C.muted }}>
+                <div style={{ fontSize:40 }}>📅</div>
+                <div style={{ marginTop:10, fontSize:14 }}>{isAr?"لا توجد مواعيد بعد":"Aucun RDV pour l'instant"}</div>
+              </div>
+            ) : rdvs.map((r,i)=>(
+              <Card key={i} style={{ padding:"14px 16px" }}>
+                <div style={{ display:"flex", alignItems:"flex-start", gap:12 }}>
+                  <div style={{ width:50, height:50, borderRadius:14, background:C.blueBg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                    <div style={{ fontSize:11, fontWeight:900, color:C.blue }}>{r.time}</div>
+                    <div style={{ fontSize:9, color:C.muted, marginTop:1 }}>{r.date?.split("/").slice(0,2).join("/")}</div>
+                  </div>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontSize:14, fontWeight:800, color:C.dark }}>{r.client_name}</div>
+                    <div style={{ fontSize:12, color:C.muted }}>📞 {r.client_phone}</div>
+                    {r.note && <div style={{ fontSize:11, color:C.muted, marginTop:2, fontStyle:"italic" }}>"{r.note}"</div>}
+                  </div>
+                  <StatusBadge status={r.status} isAr={isAr} />
+                </div>
+                {r.status==="pending" && (
+                  <div style={{ display:"flex", gap:8, marginTop:10 }}>
+                    <button onClick={()=>updateStatus(r.id,"confirmed")} style={{ flex:1, background:C.successBg, color:C.success, border:`1px solid ${C.success}`, borderRadius:10, padding:"7px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>✓ {isAr?"قبول":"Confirmer"}</button>
+                    <button onClick={()=>updateStatus(r.id,"cancelled")} style={{ flex:1, background:"#FEE2E2", color:"#B91C1C", border:"1px solid #B91C1C", borderRadius:10, padding:"7px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>✕ {isAr?"رفض":"Annuler"}</button>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </>
+        )}
+
+        {activeTab==="clients" && (
+          <>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+              <div style={{ fontSize:15, fontWeight:800, color:C.dark }}>👥 {isAr?"قاعدة العملاء":"Base clients"}</div>
+              <span style={{ fontSize:12, color:C.muted }}>{clients.length} {isAr?"عميل":"clients"}</span>
+            </div>
+            {clients.length===0 ? (
+              <div style={{ textAlign:"center", padding:50, color:C.muted }}>
+                <div style={{ fontSize:40 }}>👥</div>
+                <div style={{ marginTop:10, fontSize:14 }}>{isAr?"لا عملاء بعد":"Aucun client pour l'instant"}</div>
+              </div>
+            ) : clients.sort((a,b)=>b.count-a.count).map((cl,i)=>{
+              const initials = cl.name.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+              const colors   = [["#E1F5EE","#085041"],["#EEF4FF","#003099"],["#FAEEDA","#633806"],["#FBEAF0","#72243E"]];
+              const [bg,fg]  = colors[i%4];
+              return (
+                <Card key={i} style={{ padding:"14px 16px" }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+                    <div style={{ width:44, height:44, borderRadius:"50%", background:bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:700, color:fg, flexShrink:0 }}>{initials}</div>
+                    <div style={{ flex:1
