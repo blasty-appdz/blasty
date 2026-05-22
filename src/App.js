@@ -712,8 +712,8 @@ function ProDashboard({ user, isAr }) {
       }
       setLoading(false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id]);
+    fetchData(); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const saveProfile = async () => {
     if (!proInfo) return;
