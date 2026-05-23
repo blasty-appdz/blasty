@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blasty — Le bon professionnel. Au bon moment.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#1A6EFF;--blue-dark:#0048CC;--blue-deep:#003099;
+  --blue-light:#4D95FF;--blue-bg:#EEF4FF;--blue-glow:rgba(26,110,255,.15);
+  --dark:#050E2A;--text:#1A2340;--muted:#7A88AA;
+  --white:#FFFFFF;--border:#D6E4FF;--bg:#F4F7FF;
+  --success:#00C07F;--success-bg:#E6FAF4;
+}
+body{font-family:'Sora',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;}
+.ar{font-family:'Tajawal',sans-serif;direction:rtl;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:12px 28px;}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-logo-text{font-size:22px;font-weight:900;color:var(--blue);letter-spacing:-.5px;}
+.nav-links{display:flex;align-items:center;gap:6px;}
+.nav-link{color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;padding:6px 12px;border-radius:10px;transition:.2s;}
+.nav-link:hover{color:var(--blue);background:var(--blue-bg);}
+.nav-link .ar{font-size:11px;display:block;color:var(--muted);opacity:.7;}
+.btn-nav{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;border-radius:12px;padding:9px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;line-height:1.4;}
+.btn-nav .ar{font-size:11px;display:block;opacity:.85;}
+@media(max-width:640px){.nav-links .nav-link{display:none;}}
+.hero{min-height:100vh;background:linear-gradient(155deg,var(--blue) 0%,var(--blue-dark) 55%,var(--blue-deep) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 28px 70px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.06);}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04);}
+.hero-badge{background:rgba(255,255,255,.18);color:#fff;border-radius:30px;padding:8px 20px;font-size:13px;font-weight:700;margin-bottom:28px;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px);display:inline-block;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:52px;}
+.btn-primary{background:rgba(255,255,255,.97);color:var(--blue);border:none;border-radius:16px;padding:14px 28px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 10px 28px rgba(0,0,0,.22);text-decoration:none;display:inline-block;transition:.2s;text-align:center;}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-primary .ar{font-size:12px;font-family:'Tajawal',sans-serif;opacity:.8;margin-top:2px;}
+.btn-outline-hero{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:16px;padding:13px 26px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;transition:.2s;text-align:center;}
+.btn-outline-hero:hover{background:rgba(255,255,255,.1);}
+.btn-outline-hero .ar{font-size:12px;font-family:'Tajawal',sans-serif;opacity:.75;margin-top:2px;}
+.hero-stats{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;}
+.hero-stat{text-align:center;color:#fff;}
+.hero-stat-n{font-size:28px;font-weight:900;}
+.hero-stat-l{font-size:11px;opacity:.65;margin-top:2px;}
+.hero-stat-ar{font-size:11px;opacity:.45;font-family:'Tajawal',sans-serif;}
+.bi{margin-bottom:6px;}
+.bi-fr{font-size:clamp(20px,3.5vw,38px);font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.15;}
+.bi-fr.muted{color:rgba(255,255,255,.7);}
+.bi-ar{font-family:'Tajawal',sans-serif;direction:rtl;font-weight:800;color:rgba(255,255,255,.5);line-height:1.2;}
+section{padding:80px 28px;}
+.section-label{font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:4px;}
+.section-label-ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;font-weight:800;color:var(--blue);opacity:.7;margin-bottom:12px;}
+.section-title{font-size:clamp(24px,3.5vw,38px);font-weight:900;color:var(--dark);line-height:1.2;letter-spacing:-.5px;margin-bottom:4px;}
+.section-title-ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:clamp(18px,2.8vw,30px);font-weight:900;color:var(--dark);opacity:.65;margin-bottom:14px;}
+.section-sub{font-size:15px;color:var(--muted);line-height:1.75;max-width:520px;margin-bottom:3px;}
+.section-sub-ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:14px;color:var(--muted);line-height:1.75;max-width:520px;opacity:.8;}
+.container{max-width:1100px;margin:0 auto;}
+.center{text-align:center;}
+.center .section-sub,.center .section-sub-ar{margin:0 auto;}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;margin-top:48px;}
+.step{background:var(--white);border-radius:24px;padding:26px 22px;border:1px solid var(--border);box-shadow:0 4px 20px var(--blue-glow);transition:.25s;}
+.step:hover{transform:translateY(-4px);}
+.step-num{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.step h3{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:3px;}
+.step h3-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:14px;font-weight:800;color:var(--dark);opacity:.6;margin-bottom:8px;}
+.step p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;}
+.step p-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;color:var(--muted);opacity:.75;line-height:1.6;}
+.cats-section{background:var(--white);}
+.cats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:42px;}
+.cat-card{background:var(--bg);border-radius:18px;padding:18px 12px;text-align:center;border:1.5px solid var(--border);cursor:pointer;transition:.2s;}
+.cat-card:hover{background:var(--blue-bg);border-color:var(--blue);transform:translateY(-3px);}
+.cat-card-icon{font-size:28px;margin-bottom:8px;}
+.cat-card-name{font-size:13px;font-weight:700;color:var(--dark);}
+.cat-card-name-ar{font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:var(--muted);margin-top:2px;}
+.for-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:48px;}
+@media(max-width:700px){.for-grid{grid-template-columns:1fr;}}
+.for-card{border-radius:28px;padding:32px 28px;}
+.for-card-client{background:linear-gradient(135deg,var(--blue-bg),#dceeff);}
+.for-card-pro{background:linear-gradient(135deg,#050E2A,#0048CC);}
+.for-card h3{font-size:20px;font-weight:900;margin-bottom:3px;}
+.for-card h3-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:17px;font-weight:900;margin-bottom:14px;opacity:.7;}
+.for-card-client h3,.for-card-client h3-ar{color:var(--dark);}
+.for-card-pro h3,.for-card-pro h3-ar{color:#fff;}
+.for-card ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.for-card ul li{font-size:13px;line-height:1.5;}
+.for-card ul li .fr{display:flex;align-items:flex-start;gap:8px;}
+.for-card ul li .arli{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;opacity:.65;margin-top:1px;padding-right:20px;}
+.for-card-client ul li{color:var(--text);}
+.for-card-pro ul li .fr{color:rgba(255,255,255,.9);}
+.for-card-pro ul li .arli{color:rgba(255,255,255,.6);}
+.check-blue{color:var(--blue);flex-shrink:0;}
+.check-white{color:#7DF3C0;flex-shrink:0;}
+.for-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:14px;}
+.for-badge-client{background:var(--blue-bg);color:var(--blue);}
+.for-badge-pro{background:rgba(255,255,255,.15);color:#fff;}
+.btn-card{display:block;margin-top:20px;border-radius:14px;padding:13px 24px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;transition:.2s;width:100%;}
+.btn-card:hover{transform:translateY(-2px);}
+.btn-card .ar{font-family:'Tajawal',sans-serif;font-size:12px;opacity:.75;margin-top:3px;display:block;}
+.btn-card-client{background:var(--blue);color:#fff;}
+.btn-card-pro{background:#fff;color:var(--blue);}
+.pricing-section{background:var(--dark);}
+.pricing-section .section-title,.pricing-section .section-label{color:#fff;}
+.pricing-section .section-title-ar{color:rgba(255,255,255,.6);}
+.pricing-section .section-label-ar{color:rgba(255,255,255,.5);}
+.pricing-section .section-sub{color:rgba(255,255,255,.55);}
+.pricing-section .section-sub-ar{color:rgba(255,255,255,.4);}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:44px;}
+.price-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:26px 20px;transition:.25s;}
+.price-card:hover{transform:translateY(-4px);background:rgba(255,255,255,.09);}
+.price-card.popular{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-color:transparent;box-shadow:0 16px 40px rgba(26,110,255,.4);}
+.price-popular-badge{background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;}
+.price-emoji{font-size:24px;margin-bottom:10px;}
+.price-name{font-size:16px;font-weight:800;color:#fff;margin-bottom:2px;}
+.price-amount{font-size:28px;font-weight:900;color:#fff;margin-bottom:2px;}
+.price-period{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px;}
+.price-period-ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.price-features li .pfr{font-size:13px;color:rgba(255,255,255,.8);display:flex;gap:7px;align-items:flex-start;}
+.price-features li .par{font-family:'Tajawal',sans-serif;direction:rtl;font-size:12px;color:rgba(255,255,255,.45);margin-top:1px;padding-right:18px;}
+.price-check{color:#7DF3C0;flex-shrink:0;}
+.price-free{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px 24px;margin-top:16px;text-align:center;}
+.price-free p{color:rgba(255,255,255,.7);font-size:14px;line-height:1.7;margin-bottom:4px;}
+.price-free p.ar{font-size:13px;color:rgba(255,255,255,.45);}
+.price-free strong{color:#7DF3C0;}
+.soon-section{background:linear-gradient(155deg,var(--blue) 0%,var(--blue-dark) 60%,var(--blue-deep) 100%);padding:80px 28px;}
+.soon-section .section-label,.soon-section .section-label-ar{color:rgba(255,255,255,.7);}
+.soon-section .section-title,.soon-section .section-title-ar{color:#fff;}
+.soon-section .section-sub,.soon-section .section-sub-ar{color:rgba(255,255,255,.7);}
+.sectors-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;justify-content:center;}
+.sector-pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:30px;padding:8px 16px;backdrop-filter:blur(8px);transition:.2s;text-align:center;}
+.sector-pill:hover{background:rgba(255,255,255,.25);}
+.sector-pill .pfr{font-size:13px;font-weight:600;color:#fff;}
+.sector-pill .par{font-family:'Tajawal',sans-serif;font-size:12px;color:rgba(255,255,255,.6);margin-top:2px;}
+.cta-pro-box{background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.25);border-radius:24px;padding:36px 28px;margin-top:40px;max-width:560px;margin-left:auto;margin-right:auto;text-align:center;}
+.cta-pro-box h3{color:#fff;font-size:22px;font-weight:900;margin-bottom:4px;}
+.cta-pro-box h3-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:18px;font-weight:900;color:rgba(255,255,255,.6);margin-bottom:10px;}
+.cta-pro-box p{color:rgba(255,255,255,.75);font-size:14px;margin-bottom:4px;line-height:1.6;}
+.cta-pro-box p.ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:22px;}
+.btn-cta-pro{display:block;background:#fff;color:var(--blue);border-radius:16px;padding:15px 28px;font-size:15px;font-weight:900;text-decoration:none;text-align:center;transition:.2s;box-shadow:0 8px 24px rgba(0,0,0,.2);margin-bottom:10px;}
+.btn-cta-pro:hover{transform:translateY(-2px);}
+.btn-cta-pro .ar{font-family:'Tajawal',sans-serif;font-size:12px;opacity:.7;margin-top:3px;display:block;}
+.btn-cta-client{display:block;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:16px;padding:13px 28px;font-size:14px;font-weight:800;text-decoration:none;text-align:center;transition:.2s;}
+.btn-cta-client:hover{background:rgba(255,255,255,.1);}
+.btn-cta-client .ar{font-family:'Tajawal',sans-serif;font-size:12px;opacity:.7;margin-top:3px;display:block;}
+.cta-section{background:var(--dark);text-align:center;padding:90px 28px;}
+.cta-section h2{font-size:clamp(26px,5vw,48px);font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-.5px;}
+.cta-section h2-ar{display:block;font-family:'Tajawal',sans-serif;direction:rtl;font-size:clamp(20px,3.5vw,36px);font-weight:900;color:rgba(255,255,255,.5);margin-bottom:14px;}
+.cta-section p{font-size:15px;color:rgba(255,255,255,.6);margin-bottom:4px;line-height:1.7;}
+.cta-section p.ar{font-family:'Tajawal',sans-serif;direction:rtl;font-size:14px;color:rgba(255,255,255,.4);margin-bottom:28px;}
+footer{background:#020812;padding:34px 28px;text-align:center;}
+footer p{color:rgba(255,255,255,.35);font-size:13px;line-height:2.2;}
+footer a{color:rgba(255,255,255,.5);text-decoration:none;}
+footer a:hover{color:var(--blue-light);}
+.fade-in{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">📅</div>
+    <span class="nav-logo-text">Blasty</span>
+  </a>
+  <div class="nav-links">
+    <a href="#comment" class="nav-link">Comment ça marche<span class="ar">كيفاش يخدم</span></a>
+    <a href="#categories" class="nav-link">Catégories<span class="ar">التخصصات</span></a>
+    <a href="#tarifs" class="nav-link">Tarifs<span class="ar">الأسعار</span></a>
+    <a href="https://blasty.app?role=pro" class="btn-nav">Inscrire mon établissement<span class="ar">سجّل نشاطك</span></a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🇩🇿 Disponible à Oran &nbsp;·&nbsp; متاح في وهران</div>
+  <div style="margin-bottom:16px;">
+    <div style="font-size:clamp(52px,10vw,115px);font-weight:900;color:#fff;letter-spacing:-2px;line-height:1;">Réservez</div>
+    <div class="ar" style="font-size:clamp(32px,6vw,68px);font-weight:900;color:rgba(255,255,255,.6);letter-spacing:-1px;line-height:1.1;">احجز</div>
+  </div>
+  <div class="bi"><div class="bi-fr">Le bon professionnel.</div><div class="bi-ar" style="font-size:clamp(15px,2.5vw,24px);">المحترف الصح.</div></div>
+  <div class="bi"><div class="bi-fr muted">Au bon moment.</div><div class="bi-ar" style="font-size:clamp(14px,2vw,22px);">في الوقت الصح.</div></div>
+  <div class="bi" style="margin-bottom:32px;"><div class="bi-fr muted" style="color:rgba(255,255,255,.55);">En quelques secondes.</div><div class="bi-ar" style="font-size:clamp(13px,1.8vw,20px);color:rgba(255,255,255,.38);">في ثوانٍ معدودة.</div></div>
+  <div class="hero-btns">
+    <a href="https://blasty.app" class="btn-primary">Réserver maintenant →<span class="ar">احجز الآن</span></a>
+    <a href="https://blasty.app?role=pro" class="btn-outline-hero">Inscrire mon établissement<span class="ar">سجّل نشاطك</span></a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-n">55</div><div class="hero-stat-l">Catégories</div><div class="hero-stat-ar">تخصص</div></div>
+    <div class="hero-stat"><div class="hero-stat-n">14</div><div class="hero-stat-l">Secteurs</div><div class="hero-stat-ar">قطاع</div></div>
+    <div class="hero-stat"><div class="hero-stat-n">100%</div><div class="hero-stat-l">Gratuit clients</div><div class="hero-stat-ar">مجاني للزبائن</div></div>
+    <div class="hero-stat"><div class="hero-stat-n">🇩🇿</div><div class="hero-stat-l">Made in Oran</div><div class="hero-stat-ar">صنع في وهران</div></div>
+  </div>
+</section>
+
+<section id="comment">
+  <div class="container center fade-in">
+    <div class="section-label">Simple & Rapide</div>
+    <div class="section-label-ar">بسيط وسريع</div>
+    <h2 class="section-title">Réserver en 3 étapes</h2>
+    <div class="section-title-ar">احجز في 3 خطوات</div>
+    <p class="section-sub">Blasty est conçu pour être le plus simple possible.</p>
+    <p class="section-sub-ar">Blasty مصمم ليكون أبسط ما يمكن. بلا تعقيد.</p>
+  </div>
+  <div class="container">
+    <div class="steps">
+      <div class="step fade-in"><div class="step-num">1</div><h3>Cherchez votre service</h3><h3-ar>دوّر على الخدمة</h3-ar><p>Médecin, coiffeur, dentiste, spa… 55 catégories dans votre ville.</p><p-ar>طبيب، حلاق، طبيب أسنان، سبا… 55 تخصص في مدينتك.</p-ar></div>
+      <div class="step fade-in"><div class="step-num">2</div><h3>Choisissez un créneau</h3><h3-ar>اختار الوقت</h3-ar><p>Voyez les disponibilités en temps réel. Date et heure à votre convenance.</p><p-ar>شوف المواعيد المتاحة. اختار التاريخ والوقت اللي يناسبك.</p-ar></div>
+      <div class="step fade-in"><div class="step-num">3</div><h3>Confirmé instantanément</h3><h3-ar>تأكيد فوري</h3-ar><p>RDV confirmé immédiatement. SMS de rappel la veille.</p><p-ar>الموعد يتأكد على طول. رسالة SMS تذكير قبل الموعد.</p-ar></div>
+      <div class="step fade-in"><div class="step-num">✓</div><h3>Toujours gratuit pour vous</h3><h3-ar>مجاني دايما</h3-ar><p>Les clients ne paient jamais rien sur Blasty. 100% gratuit pour toujours.</p><p-ar>الزبائن ما يدفعوش غير شيء. Blasty مجاني 100% للأفراد.</p-ar></div>
+    </div>
+  </div>
+</section>
+
+<section id="categories" class="cats-section">
+  <div class="container center fade-in">
+    <div class="section-label">55 catégories</div>
+    <div class="section-label-ar">55 تخصص</div>
+    <h2 class="section-title">Tout ce dont vous avez besoin</h2>
+    <div class="section-title-ar">كل ما تحتاجه</div>
+    <p class="section-sub">De la santé à l'événementiel, tous les secteurs en Algérie.</p>
+    <p class="section-sub-ar">من الصحة إلى الأفراح، كل القطاعات في الجزائر.</p>
+  </div>
+  <div class="container">
+    <div class="cats-grid fade-in">
+      <div class="cat-card"><div class="cat-card-icon">🩺</div><div class="cat-card-name">Santé</div><div class="cat-card-name-ar">الصحة</div></div>
+      <div class="cat-card"><div class="cat-card-icon">💇</div><div class="cat-card-name">Coiffure</div><div class="cat-card-name-ar">الحلاقة</div></div>
+      <div class="cat-card"><div class="cat-card-icon">💅</div><div class="cat-card-name">Esthétique</div><div class="cat-card-name-ar">التجميل</div></div>
+      <div class="cat-card"><div class="cat-card-icon">🧠</div><div class="cat-card-name">Bien-être</div><div class="cat-card-name-ar">العافية</div></div>
+      <div class="cat-card"><div class="cat-card-icon">🏋</div><div class="cat-card-name">Sport</div><div class="cat-card-name-ar">الرياضة</div></div>
+      <div class="cat-card"><div class="cat-card-icon">🍽</div><div class="cat-card-name">Restaurant</div><div class="cat-card-name-ar">المطعم</div></div>
+      <div class="cat-card"><div class="cat-card-icon">🏨</div><div class="cat-card-name">Hébergement</div><div class="cat-card-name-ar">الإقامة</div></div>
+      <div class="cat-card"><div class="cat-card-icon">🚕</div><div class="cat-card-name">Transport</div><div class="cat-card-name-ar">النقل</div></div>
+      <div class="cat-card"><div class="cat-card-icon">📸</div><div class="cat-card-name">Événementiel</div><div class="cat-card-name-ar">الأفراح</div></div>
+      <div class="cat-card"><div class="cat-card-icon">⚖</div><div class="cat-card-name">Juridique</div><div class="cat-card-name-ar">القانون</div></div>
+      <div class="cat-card"><div class="cat-card-icon">📚</div><div class="cat-card-name">Formation</div><div class="cat-card-name-ar">التكوين</div></div>
+      <div class="cat-card"><div class="cat-card-icon">🔧</div><div class="cat-card-name">Domicile</div><div class="cat-card-name-ar">خدمات المنزل</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container center fade-in">
+    <div class="section-label">Pour tout le monde</div>
+    <div class="section-label-ar">للجميع</div>
+    <h2 class="section-title">Client ou Professionnel ?</h2>
+    <div class="section-title-ar">زبون ولا محترف؟</div>
+    <p class="section-sub">Blasty est conçu pour les deux.</p>
+    <p class="section-sub-ar">Blasty مصمم للاثنين. كل واحد يلقى حاجته.</p>
+  </div>
+  <div class="container">
+    <div class="for-grid">
+      <div class="for-card for-card-client fade-in">
+        <div class="for-badge for-badge-client">👤 Pour les clients · للزبائن</div>
+        <h3>Réservez facilement</h3>
+        <h3-ar>احجز بسهولة</h3-ar>
+        <ul>
+          <li><span class="fr"><span class="check-blue">✓</span>Trouvez les meilleurs pros près de chez vous</span><span class="arli">لقى أحسن المحترفين قريب منك</span></li>
+          <li><span class="fr"><span class="check-blue">✓</span>Réservez 24h/24, 7j/7 sans téléphoner</span><span class="arli">احجز 24/24 بدون ما تتصل</span></li>
+          <li><span class="fr"><span class="check-blue">✓</span>Rappel SMS automatique avant le RDV</span><span class="arli">SMS تذكير أوتوماتيك قبل الموعد</span></li>
+          <li><span class="fr"><span class="check-blue">✓</span>Tous vos RDV en un seul endroit</span><span class="arli">كل مواعيدك في مكان واحد</span></li>
+          <li><span class="fr"><span class="check-blue">✓</span><strong>100% gratuit, toujours</strong></span><span class="arli"><strong>مجاني 100%، دايما</strong></span></li>
+        </ul>
+        <a href="https://blasty.app" class="btn-card btn-card-client">
+          Réserver maintenant →<span class="ar">احجز الآن</span>
+        </a>
+      </div>
+      <div class="for-card for-card-pro fade-in">
+        <div class="for-badge for-badge-pro">💼 Pour les pros · للمحترفين</div>
+        <h3>Développez votre activité</h3>
+        <h3-ar>طوّر نشاطك</h3-ar>
+        <ul>
+          <li><span class="fr"><span class="check-white">✓</span>Agenda en ligne visible 24h/24</span><span class="arli">روزنامة أونلاين تبان 24/24</span></li>
+          <li><span class="fr"><span class="check-white">✓</span>Zéro no-show grâce aux rappels SMS</span><span class="arli">ولا غياب بفضل رسائل التذكير</span></li>
+          <li><span class="fr"><span class="check-white">✓</span>Tableau de bord complet</span><span class="arli">لوحة تحكم كاملة</span></li>
+          <li><span class="fr"><span class="check-white">✓</span>Nouveaux clients sans publicité</span><span class="arli">زبائن جدد بدون إشهار</span></li>
+          <li><span class="fr"><span class="check-white">✓</span>À partir de <strong>4 990 DA/mois</strong></span><span class="arli">من <strong>4 990 دج/شهر</strong></span></li>
+        </ul>
+        <a href="https://blasty.app?role=pro" class="btn-card btn-card-pro">
+          💼 Inscrire mon établissement →<span class="ar">سجّل نشاطك الآن</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tarifs" class="pricing-section">
+  <div class="container center fade-in">
+    <div class="section-label">Tarifs professionnels</div>
+    <div class="section-label-ar">أسعار المحترفين</div>
+    <h2 class="section-title">Simple et transparent</h2>
+    <div class="section-title-ar">بسيط وواضح</div>
+    <p class="section-sub">Choisissez votre formule. Sans engagement. Tout inclus.</p>
+    <p class="section-sub-ar">اختار الفورمولا اللي تناسبك. بدون التزام. كل شيء مدرج.</p>
+  </div>
+  <div class="container">
+    <div class="pricing-grid">
+      <div class="price-card fade-in">
+        <div class="price-emoji">🌱</div>
+        <div class="price-name">Starter</div>
+        <div class="price-amount">4 990 DA</div>
+        <div class="price-period">/mois · tout inclus</div>
+        <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
+        <ul class="price-features">
+          <li><span class="pfr"><span class="price-check">✓</span>Agenda en ligne</span><span class="par">روزنامة أونلاين</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>50 RDV/mois</span><span class="par">50 موعد/شهر</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>100 SMS inclus</span><span class="par">100 رسالة مدرجة</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>Page profil</span><span class="par">صفحة بروفايل</span></li>
+        </ul>
+      </div>
+      <div class="price-card popular fade-in">
+        <div class="price-popular-badge">⭐ Le plus populaire · الأكثر طلباً</div>
+        <div class="price-emoji">🌟</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amount">12 990 DA</div>
+        <div class="price-period">/mois · tout inclus</div>
+        <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
+        <ul class="price-features">
+          <li><span class="pfr"><span class="price-check">✓</span>Tout Starter</span><span class="par">كل مزايا Starter</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>200 RDV/mois</span><span class="par">200 موعد/شهر</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>400 SMS inclus</span><span class="par">400 رسالة مدرجة</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>Statistiques avancées</span><span class="par">إحصائيات متقدمة</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>Support prioritaire</span><span class="par">دعم أولوية</span></li>
+        </ul>
+      </div>
+      <div class="price-card fade-in">
+        <div class="price-emoji">🏢</div>
+        <div class="price-name">Business</div>
+        <div class="price-amount">29 990 DA</div>
+        <div class="price-period">/mois · tout inclus</div>
+        <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
+        <ul class="price-features">
+          <li><span class="pfr"><span class="price-check">✓</span>Tout Pro</span><span class="par">كل مزايا Pro</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>500 RDV/mois</span><span class="par">500 موعد/شهر</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>1 000 SMS inclus</span><span class="par">1000 رسالة مدرجة</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>Multi-employés</span><span class="par">متعدد الموظفين</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>Multi-sites</span><span class="par">متعدد الفروع</span></li>
+        </ul>
+      </div>
+      <div class="price-card fade-in">
+        <div class="price-emoji">👑</div>
+        <div class="price-name">Premium</div>
+        <div class="price-amount">74 990 DA</div>
+        <div class="price-period">/mois · tout inclus</div>
+        <div class="price-period-ar">/ شهر · كل شيء مدرج</div>
+        <ul class="price-features">
+          <li><span class="pfr"><span class="price-check">✓</span>Tout Business</span><span class="par">كل مزايا Business</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>1 500 RDV/mois</span><span class="par">1500 موعد/شهر</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>3 000 SMS inclus</span><span class="par">3000 رسالة مدرجة</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>Marque blanche</span><span class="par">علامة تجارية خاصة</span></li>
+          <li><span class="pfr"><span class="price-check">✓</span>Account manager dédié</span><span class="par">مسؤول حساب خاص</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="price-free fade-in">
+      <p>👤 Vous êtes un client particulier ? <strong>Blasty est 100% gratuit pour vous, pour toujours.</strong></p>
+      <p class="ar">أنت زبون عادي؟ <strong>Blasty مجاني 100% ليك، دايما وأبدا.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section id="bientot" class="soon-section">
+  <div class="container center fade-in">
+    <div class="section-label">Disponible maintenant</div>
+    <div class="section-label-ar">متاح الآن</div>
+    <h2 class="section-title">Blasty est à Oran 🎉</h2>
+    <div class="section-title-ar">Blasty في وهران 🎉</div>
+    <p class="section-sub">Inscrivez votre établissement et commencez à recevoir des clients dès aujourd'hui.</p>
+    <p class="section-sub-ar">سجّل نشاطك وابدأ تستقبل زبائن من اليوم.</p>
+  </div>
+  <div class="container fade-in">
+    <div class="sectors-grid">
+      <div class="sector-pill"><div class="pfr">🩺 Santé</div><div class="par">الصحة</div></div>
+      <div class="sector-pill"><div class="pfr">💇 Coiffure & Barbier</div><div class="par">الحلاقة</div></div>
+      <div class="sector-pill"><div class="pfr">💅 Esthétique</div><div class="par">التجميل</div></div>
+      <div class="sector-pill"><div class="pfr">🧠 Bien-être & Spa</div><div class="par">العافية والسبا</div></div>
+      <div class="sector-pill"><div class="pfr">🏋 Sport & Fitness</div><div class="par">الرياضة</div></div>
+      <div class="sector-pill"><div class="pfr">🍽 Restauration</div><div class="par">المطاعم</div></div>
+      <div class="sector-pill"><div class="pfr">🏨 Hébergement</div><div class="par">الفنادق والإقامة</div></div>
+      <div class="sector-pill"><div class="pfr">🚕 Transport</div><div class="par">التنقل</div></div>
+      <div class="sector-pill"><div class="pfr">📸 Événementiel</div><div class="par">الأفراح والمناسبات</div></div>
+      <div class="sector-pill"><div class="pfr">⚖ Juridique</div><div class="par">القانون</div></div>
+      <div class="sector-pill"><div class="pfr">📚 Formation</div><div class="par">التكوين والدروس</div></div>
+      <div class="sector-pill"><div class="pfr">🔧 Services à domicile</div><div class="par">خدمات المنزل</div></div>
+      <div class="sector-pill"><div class="pfr">🐾 Animaux</div><div class="par">الحيوانات</div></div>
+      <div class="sector-pill"><div class="pfr">🏗 Administratif</div><div class="par">الإداري</div></div>
+    </div>
+    <div class="cta-pro-box fade-in">
+      <h3>Vous êtes un professionnel ?</h3>
+      <h3-ar>أنت محترف؟</h3-ar>
+      <p>Inscrivez votre établissement en 2 minutes. Recevez vos premiers clients aujourd'hui.</p>
+      <p class="ar">سجّل نشاطك في دقيقتين. استقبل زبائنك من اليوم.</p>
+      <a href="https://blasty.app?role=pro" class="btn-cta-pro">
+        💼 Inscrire mon établissement gratuitement →<span class="ar">سجّل نشاطك مجاناً</span>
+      </a>
+      <a href="https://blasty.app" class="btn-cta-client">
+        👤 Je suis un client, je veux réserver<span class="ar">أنا زبون، نحجز</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container fade-in">
+    <h2>Prêt à simplifier votre quotidien ?</h2>
+    <h2-ar>مستعد تبسّط يومك؟</h2-ar>
+    <p>Rejoignez les premiers Algériens qui réservent avec Blasty.</p>
+    <p class="ar">انضم للأوائل اللي يحجزوا مع Blasty.</p>
+    <div class="hero-btns">
+      <a href="https://blasty.app" class="btn-primary">Réserver maintenant →<span class="ar">احجز الآن</span></a>
+      <a href="https://blasty.app?role=pro" class="btn-outline-hero">Inscrire mon établissement<span class="ar">سجّل نشاطك</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <strong style="color:rgba(255,255,255,.6)">Blasty</strong> — Réservation en ligne en Algérie · الحجز الإلكتروني في الجزائر<br/>
+    📍 Oran · وهران &nbsp;·&nbsp; 🇩🇿 Marque déposée INAPI N° 146995 · Classes 35 & 42<br/>
+    <a href="https://blasty.app">blasty.app</a> &nbsp;·&nbsp;
+    <a href="mailto:contact@blasty.app">contact@blasty.app</a><br/><br/>
+    © 2025 Blasty · Fait avec ❤️ à Oran · صنع بـ❤️ في وهران
+  </p>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
