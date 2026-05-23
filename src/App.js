@@ -244,7 +244,8 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [form, setForm] = useState({ name:"", phone:"", password:"", role:initRole, category_id:"", city:"Oran" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [otpStep, setOtpStep] = useState(false);
+  // otpMode: null | "register_verify" | "forgot"
+  const [otpMode, setOtpMode] = useState(null);
   const [otpCode, setOtpCode] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const isLogin = mode === "login";
@@ -258,23 +259,45 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
     return "+213" + clean;
   };
 
-  const handleSendOtp = async () => {
+  const sendOtp = async (phone) => {
+    const res = await fetch(`${SERVER}/send-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone }) });
+    return res.json();
+  };
+
+  // CONNEXION — numéro + mot de passe, 0 SMS
+  const handleLogin = async () => {
     setError("");
     if (!form.phone) { setError("Entrez votre numéro."); return; }
-    if (!isLogin && !form.name) { setError("Entrez votre nom."); return; }
-    if (!isLogin && form.role === "professionnel" && !form.category_id) { setError("Choisissez votre catégorie."); return; }
+    if (!form.password) { setError("Entrez votre mot de passe."); return; }
+    setLoading(true);
+    try {
+      const { data, error: err } = await supabase
+        .from("users").select("*").eq("phone", form.phone).eq("password", form.password).single();
+      if (err || !data) { setError("Numéro ou mot de passe incorrect."); setLoading(false); return; }
+      onAuth(data);
+    } catch(e) { setError("Erreur de connexion."); }
+    setLoading(false);
+  };
+
+  // INSCRIPTION — envoi SMS OTP pour vérifier le numéro
+  const handleRegisterSendOtp = async () => {
+    setError("");
+    if (!form.phone) { setError("Entrez votre numéro."); return; }
+    if (!form.name) { setError("Entrez votre nom."); return; }
+    if (!form.password || form.password.length < 6) { setError("Mot de passe minimum 6 caractères."); return; }
+    if (form.role === "professionnel" && !form.category_id) { setError("Choisissez votre catégorie."); return; }
     setLoading(true);
     try {
       const phone = formatPhone(form.phone);
-      const res = await fetch(`${SERVER}/send-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone }) });
-      const data = await res.json();
-      if (data.success) { setOtpStep(true); }
+      const data = await sendOtp(phone);
+      if (data.success) { setOtpMode("register_verify"); }
       else setError("Erreur envoi SMS : " + (data.error || ""));
     } catch(e) { setError("Serveur OTP inaccessible."); }
     setLoading(false);
   };
 
-  const handleVerifyOtp = async () => {
+  // INSCRIPTION — vérification OTP puis création compte
+  const handleRegisterVerify = async () => {
     setError("");
     if (otpCode.length < 4) { setError("Entrez le code reçu par SMS."); return; }
     setLoading(true);
@@ -283,26 +306,51 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const res = await fetch(`${SERVER}/verify-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone, code:otpCode }) });
       const check = await res.json();
       if (!check.success) { setError("Code incorrect ou expiré."); setLoading(false); return; }
-      if (isLogin) {
-        const { data, error: err } = await supabase.from("users").select("*").eq("phone", form.phone).single();
-        if (err || !data) { setError("Numéro introuvable. Créez un compte."); setLoading(false); return; }
-        onAuth(data);
-      } else {
-        const { data, error: err } = await supabase.from("users").insert({ name:form.name, phone:form.phone, role:form.role }).select().single();
-        if (err) { setError("Numéro déjà utilisé ou erreur."); setLoading(false); return; }
-        // ✅ Bug fix : on utilise data.id et non form.id
-        if (form.role === "professionnel") {
-          const cat = getCat(form.category_id);
-          await supabase.from("professionals").insert({
-            user_id:data.id, name:form.name, phone:form.phone, city:form.city,
-            category_id:form.category_id, speciality:cat.label || "",
-            active:true, rating:5.0, reviews_count:0, plan:"starter",
-            next_available:"Disponible", price:"Sur devis",
-          });
-        }
-        onAuth(data);
+      const { data, error: err } = await supabase.from("users").insert({ name:form.name, phone:form.phone, password:form.password, role:form.role }).select().single();
+      if (err) { setError("Numéro déjà utilisé ou erreur."); setLoading(false); return; }
+      if (form.role === "professionnel") {
+        const cat = getCat(form.category_id);
+        await supabase.from("professionals").insert({
+          user_id:data.id, name:form.name, phone:form.phone, city:form.city,
+          category_id:form.category_id, speciality:cat.label || "",
+          active:true, rating:5.0, reviews_count:0, plan:"starter",
+          next_available:"Disponible", price:"Sur devis",
+        });
       }
+      onAuth(data);
     } catch(e) { setError("Erreur de connexion."); }
+    setLoading(false);
+  };
+
+  // MOT DE PASSE OUBLIÉ — envoi SMS
+  const handleForgotSendOtp = async () => {
+    setError("");
+    if (!form.phone) { setError("Entrez votre numéro."); return; }
+    setLoading(true);
+    try {
+      const phone = formatPhone(form.phone);
+      const data = await sendOtp(phone);
+      if (data.success) { setOtpMode("forgot"); }
+      else setError("Erreur envoi SMS : " + (data.error || ""));
+    } catch(e) { setError("Serveur OTP inaccessible."); }
+    setLoading(false);
+  };
+
+  // MOT DE PASSE OUBLIÉ — vérification OTP puis reset mdp
+  const handleForgotVerify = async () => {
+    setError("");
+    if (otpCode.length < 4) { setError("Entrez le code reçu par SMS."); return; }
+    if (!form.password || form.password.length < 6) { setError("Nouveau mot de passe minimum 6 caractères."); return; }
+    setLoading(true);
+    try {
+      const phone = formatPhone(form.phone);
+      const res = await fetch(`${SERVER}/verify-otp`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ phone, code:otpCode }) });
+      const check = await res.json();
+      if (!check.success) { setError("Code incorrect ou expiré."); setLoading(false); return; }
+      const { data, error: err } = await supabase.from("users").update({ password:form.password }).eq("phone", form.phone).select().single();
+      if (err || !data) { setError("Numéro introuvable."); setLoading(false); return; }
+      onAuth(data);
+    } catch(e) { setError("Erreur."); }
     setLoading(false);
   };
 
@@ -363,7 +411,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
             <label style={{ fontSize:13, fontWeight:700, color:C.text }}>Mot de passe</label>
             {isLogin && (
-              <span onClick={() => setOtpStep(false)} style={{ fontSize:12, color:C.blue, fontWeight:700, cursor:"pointer" }}>
+              <span onClick={handleForgotSendOtp} style={{ fontSize:12, color:C.blue, fontWeight:700, cursor:"pointer" }}>
                 Mot de passe oublié ?
               </span>
             )}
@@ -376,15 +424,51 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
           </div>
         </div>
         {error && <div style={{ background:"#FEE2E2", color:"#B91C1C", borderRadius:12, padding:"10px 14px", fontSize:13, marginBottom:16 }}>{error}</div>}
-        {!otpStep ? (
+
+        {/* ── CONNEXION : numéro + mot de passe, 0 SMS ── */}
+        {isLogin && !otpMode && (
           <>
-            <PrimaryBtn onClick={handleSendOtp} disabled={loading}>{loading ? "Envoi SMS..." : "Recevoir le code SMS"}</PrimaryBtn>
+            <PrimaryBtn onClick={handleLogin} disabled={loading}>{loading ? "Connexion..." : "Se connecter"}</PrimaryBtn>
             <div style={{ textAlign:"center", marginTop:20, fontSize:14, color:C.muted }}>
-              {isLogin ? "Pas encore de compte ? " : "Déjà un compte ? "}
-              <span style={{ color:C.blue, fontWeight:700, cursor:"pointer" }} onClick={onSwitch}>{isLogin ? "S'inscrire" : "Se connecter"}</span>
+              Pas encore de compte ? <span style={{ color:C.blue, fontWeight:700, cursor:"pointer" }} onClick={onSwitch}>S'inscrire</span>
             </div>
           </>
-        ) : (
+        )}
+
+        {/* ── MOT DE PASSE OUBLIÉ — saisie OTP + nouveau mdp ── */}
+        {isLogin && otpMode === "forgot" && (
+          <>
+            <div style={{ background:C.successBg, borderRadius:14, padding:"14px 16px", marginBottom:16, fontSize:13, color:C.success, fontWeight:600, textAlign:"center" }}>
+              SMS envoyé au {form.phone}
+            </div>
+            <div style={{ marginBottom:14 }}>
+              <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>Code SMS reçu</label>
+              <input style={{ ...inp, fontSize:24, fontWeight:900, textAlign:"center", letterSpacing:10 }} placeholder="------" maxLength={6} value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ""))} />
+            </div>
+            <div style={{ marginBottom:20 }}>
+              <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>Nouveau mot de passe</label>
+              <div style={{ position:"relative" }}>
+                <input style={{ ...inp, paddingRight:48 }} placeholder="Minimum 6 caractères" type={showPwd?"text":"password"} value={form.password} onChange={e => setForm({...form, password:e.target.value})} />
+                <button onClick={() => setShowPwd(p => !p)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", fontSize:18, color:C.muted, padding:0 }}>{showPwd?"🙈":"👁"}</button>
+              </div>
+            </div>
+            <PrimaryBtn onClick={handleForgotVerify} disabled={loading}>{loading ? "Réinitialisation..." : "Réinitialiser le mot de passe"}</PrimaryBtn>
+            <button onClick={() => { setOtpMode(null); setOtpCode(""); setError(""); }} style={{ background:"transparent", border:"none", color:C.muted, fontSize:13, cursor:"pointer", fontFamily:"inherit", width:"100%", marginTop:14, textAlign:"center" }}>← Retour à la connexion</button>
+          </>
+        )}
+
+        {/* ── INSCRIPTION — envoi OTP pour vérifier le numéro ── */}
+        {!isLogin && !otpMode && (
+          <>
+            <PrimaryBtn onClick={handleRegisterSendOtp} disabled={loading}>{loading ? "Envoi SMS..." : "Vérifier mon numéro par SMS"}</PrimaryBtn>
+            <div style={{ textAlign:"center", marginTop:20, fontSize:14, color:C.muted }}>
+              Déjà un compte ? <span style={{ color:C.blue, fontWeight:700, cursor:"pointer" }} onClick={onSwitch}>Se connecter</span>
+            </div>
+          </>
+        )}
+
+        {/* ── INSCRIPTION — vérification OTP ── */}
+        {!isLogin && otpMode === "register_verify" && (
           <>
             <div style={{ background:C.successBg, borderRadius:14, padding:"14px 16px", marginBottom:20, fontSize:13, color:C.success, fontWeight:600, textAlign:"center" }}>
               SMS envoyé au {form.phone} — valable 10 minutes
@@ -393,10 +477,8 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
               <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>Code de vérification</label>
               <input style={{ ...inp, fontSize:28, fontWeight:900, textAlign:"center", letterSpacing:12 }} placeholder="------" maxLength={6} value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ""))} />
             </div>
-            <PrimaryBtn onClick={handleVerifyOtp} disabled={loading}>{loading ? "Vérification..." : "Valider le code"}</PrimaryBtn>
-            <button onClick={() => { setOtpStep(false); setOtpCode(""); setError(""); }} style={{ background:"transparent", border:"none", color:C.muted, fontSize:13, cursor:"pointer", fontFamily:"inherit", width:"100%", marginTop:14, textAlign:"center" }}>
-              Modifier mon numéro
-            </button>
+            <PrimaryBtn onClick={handleRegisterVerify} disabled={loading}>{loading ? "Vérification..." : "Valider le code"}</PrimaryBtn>
+            <button onClick={() => { setOtpMode(null); setOtpCode(""); setError(""); }} style={{ background:"transparent", border:"none", color:C.muted, fontSize:13, cursor:"pointer", fontFamily:"inherit", width:"100%", marginTop:14, textAlign:"center" }}>← Modifier mon numéro</button>
           </>
         )}
         <div style={{ textAlign:"center", marginTop:24, fontSize:12, color:C.muted }}>En continuant, vous acceptez les <span style={{ color:C.blue }}>CGU de {BRAND}</span></div>
