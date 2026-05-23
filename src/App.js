@@ -574,7 +574,7 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
     const fetchSlots = async () => {
       setLoadingSlots(true);
       setTime(null);
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("availability")
         .select("slot_time")
         .eq("professional_id", pro.id)
@@ -918,7 +918,7 @@ function ProDashboard({ user, isAr }) {
       setLoading(false);
     };
     fetchData();
-  }, [user.id]);
+  }, [user.id, user.phone]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const saveProfile = async () => {
     if (!proInfo) return;
