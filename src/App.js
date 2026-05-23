@@ -246,6 +246,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [error, setError] = useState("");
   const [otpStep, setOtpStep] = useState(false);
   const [otpCode, setOtpCode] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
   const isLogin = mode === "login";
   const SERVER = "https://blasty-production.up.railway.app";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
@@ -359,8 +360,20 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
           <input style={inp} placeholder="0555 12 34 56" type="tel" value={form.phone} onChange={e => setForm({...form, phone:e.target.value})} />
         </div>
         <div style={{ marginBottom:20 }}>
-          <label style={{ fontSize:13, fontWeight:700, color:C.text, marginBottom:6, display:"block" }}>Mot de passe</label>
-          <input style={inp} placeholder="••••••••" type="password" value={form.password} onChange={e => setForm({...form, password:e.target.value})} />
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+            <label style={{ fontSize:13, fontWeight:700, color:C.text }}>Mot de passe</label>
+            {isLogin && (
+              <span onClick={() => setOtpStep(false)} style={{ fontSize:12, color:C.blue, fontWeight:700, cursor:"pointer" }}>
+                Mot de passe oublié ?
+              </span>
+            )}
+          </div>
+          <div style={{ position:"relative" }}>
+            <input style={{ ...inp, paddingRight:48 }} placeholder="••••••••" type={showPwd?"text":"password"} value={form.password} onChange={e => setForm({...form, password:e.target.value})} />
+            <button onClick={() => setShowPwd(p => !p)} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", fontSize:18, color:C.muted, padding:0 }}>
+              {showPwd ? "🙈" : "👁"}
+            </button>
+          </div>
         </div>
         {error && <div style={{ background:"#FEE2E2", color:"#B91C1C", borderRadius:12, padding:"10px 14px", fontSize:13, marginBottom:16 }}>{error}</div>}
         {!otpStep ? (
@@ -550,6 +563,87 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
             <button onClick={clearFilters} style={{ marginTop:16, background:C.blue, color:C.white, border:"none", borderRadius:12, padding:"10px 20px", fontFamily:"inherit", fontWeight:700, cursor:"pointer" }}>{isAr ? "إعادة ضبط" : "Réinitialiser"}</button>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// PROFIL PUBLIC DU PRO (vue client)
+// ─────────────────────────────────────────────
+function ProProfileScreen({ pro, isAr, onBack, onBook }) {
+  const cat = getCat(pro.category_id);
+  const stars = Math.floor(pro.rating || 5);
+  return (
+    <div style={{ paddingBottom:40 }}>
+      <GradHeader>
+        <button onClick={onBack} style={{ position:"absolute", top:52, [isAr?"right":"left"]:16, background:"rgba(255,255,255,.2)", border:"none", color:"#fff", width:40, height:40, borderRadius:13, cursor:"pointer", fontSize:20, display:"flex", alignItems:"center", justifyContent:"center" }}>←</button>
+        <div style={{ width:90, height:90, borderRadius:26, background:"rgba(255,255,255,.2)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:46, margin:"0 auto 14px" }}>{pro.img || "👤"}</div>
+        <div style={{ fontSize:22, fontWeight:900, color:"#fff", textAlign:"center" }}>{isAr&&pro.name_ar ? pro.name_ar : pro.name}</div>
+        <div style={{ fontSize:13, color:"rgba(255,255,255,.8)", textAlign:"center", marginTop:4 }}>{cat.icon} {isAr?cat.labelAr:cat.label} · {pro.city}</div>
+        <div style={{ display:"flex", justifyContent:"center", gap:4, marginTop:8 }}>
+          {Array.from({length:5}).map((_,i) => (
+            <span key={i} style={{ fontSize:20, color:i<stars?"#FFB830":"rgba(255,255,255,.3)" }}>★</span>
+          ))}
+          <span style={{ color:"rgba(255,255,255,.8)", fontSize:13, marginLeft:6, alignSelf:"center" }}>{pro.rating} ({pro.reviews_count} avis)</span>
+        </div>
+      </GradHeader>
+
+      <div style={{ padding:"20px 20px 0" }}>
+        {/* Infos rapides */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10, marginBottom:16 }}>
+          {[
+            ["📍", isAr?"المدينة":"Ville",        pro.city],
+            ["💰", isAr?"السعر":"Tarif",          pro.price || "Sur devis"],
+            ["🟢", isAr?"التوفر":"Dispo",         pro.next_available || "Disponible"],
+          ].map(([ic,lb,val]) => (
+            <div key={lb} style={{ background:"#fff", borderRadius:16, padding:"12px 10px", textAlign:"center", border:`1px solid ${C.border}` }}>
+              <div style={{ fontSize:20 }}>{ic}</div>
+              <div style={{ fontSize:10, color:C.muted, marginTop:2 }}>{lb}</div>
+              <div style={{ fontSize:12, fontWeight:800, color:C.dark, marginTop:2 }}>{val}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Spécialité */}
+        {pro.speciality && (
+          <Card>
+            <div style={{ fontSize:14, fontWeight:800, color:C.dark, marginBottom:6 }}>🎓 {isAr?"التخصص":"Spécialité"}</div>
+            <div style={{ fontSize:13, color:C.muted }}>{pro.speciality}</div>
+          </Card>
+        )}
+
+        {/* Description */}
+        {pro.description && (
+          <Card>
+            <div style={{ fontSize:14, fontWeight:800, color:C.dark, marginBottom:6 }}>📝 {isAr?"الوصف":"À propos"}</div>
+            <div style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>{pro.description}</div>
+          </Card>
+        )}
+
+        {/* Adresse */}
+        {pro.address && (
+          <Card>
+            <div style={{ fontSize:14, fontWeight:800, color:C.dark, marginBottom:6 }}>📍 {isAr?"العنوان":"Adresse"}</div>
+            <div style={{ fontSize:13, color:C.muted }}>{pro.address}</div>
+          </Card>
+        )}
+
+        {/* Catégorie badge */}
+        <Card style={{ background:C.blueBg }}>
+          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+            <div style={{ width:50, height:50, borderRadius:14, background:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26 }}>{cat.icon}</div>
+            <div>
+              <div style={{ fontSize:13, color:C.muted }}>{isAr?"التخصص":"Catégorie"}</div>
+              <div style={{ fontSize:15, fontWeight:800, color:C.blue }}>{isAr?cat.labelAr:cat.label}</div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Bouton réserver */}
+        <PrimaryBtn onClick={() => onBook(pro)} style={{ marginTop:8 }}>
+          📅 {isAr ? "احجز موعداً الآن" : "Réserver un RDV maintenant"}
+        </PrimaryBtn>
       </div>
     </div>
   );
@@ -1248,7 +1342,8 @@ export default function App() {
   const isAr = lang === "ar";
 
   const handleAuth    = u   => { localStorage.setItem("blasty_user", JSON.stringify(u)); setUser(u); setScreen("app"); setAppPage("home"); };
-  const handleBook    = pro => { setSelPro(pro); setAppPage("booking"); };
+  const handleBook    = pro => { setSelPro(pro); setAppPage("profile_pro"); };
+  const handleBookNow = pro => { setSelPro(pro); setAppPage("booking"); };
   const handleConfirm = b   => { setBooking(b); setAppPage("success"); };
   const handleLogout  = ()  => { localStorage.removeItem("blasty_user"); setUser(null); setScreen("splash"); };
 
@@ -1266,13 +1361,14 @@ export default function App() {
     <div style={{ fontFamily:"'Sora','Tajawal',sans-serif", minHeight:"100vh", background:C.bg, color:C.text, direction:isAr?"rtl":"ltr", maxWidth:430, margin:"0 auto", position:"relative" }}>
       {fonts}
       {appPage === "home"    && <HomeScreen    user={user} isAr={isAr} lang={lang} setLang={setLang} onBook={handleBook} />}
+      {appPage === "profile_pro" && selPro && <ProProfileScreen pro={selPro} isAr={isAr} onBack={() => setAppPage("home")} onBook={handleBookNow} />}
       {appPage === "booking" && selPro && <BookingScreen pro={selPro} user={user} isAr={isAr} onBack={() => setAppPage("home")} onConfirm={handleConfirm} />}
       {appPage === "success" && booking && <SuccessScreen booking={booking} isAr={isAr} onHome={() => setAppPage("home")} />}
       {appPage === "myrdv"   && <MyBookingsScreen user={user} isAr={isAr} />}
       {appPage === "pro"     && <ProDashboard user={user} isAr={isAr} />}
       {appPage === "profile" && <ProfileScreen user={user} isAr={isAr} onLogout={handleLogout} />}
 
-      {appPage !== "booking" && appPage !== "success" && (
+      {appPage !== "booking" && appPage !== "success" && appPage !== "profile_pro" && (
         <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:430, background:C.white, borderTop:`1px solid ${C.border}`, display:"flex", justifyContent:"space-around", padding:"10px 0 20px", zIndex:200, boxShadow:"0 -4px 20px rgba(26,110,255,.08)" }}>
           {NAV.map(([id,ic,lb]) => (
             <div key={id} onClick={() => setAppPage(id)} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:3, cursor:"pointer", color:appPage===id?C.blue:C.muted, fontSize:10, fontWeight:appPage===id?800:400, transition:"all .15s" }}>
