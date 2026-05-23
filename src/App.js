@@ -86,8 +86,10 @@ const CATEGORIES = [
 const GROUPS = [...new Set(CATEGORIES.map(c => c.group))];
 const DAYS_FR = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
 const DAYS_AR = ["أحد","اثن","ثلا","أرب","خمي","جمع","سبت"];
+const DAYS_FULL_FR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+const DAYS_FULL_AR = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 const CITIES = ["Toutes villes","Oran","Alger","Constantine","Annaba","Tizi Ouzou","Sétif","Blida"];
-const TIME_SLOTS = ["09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
+const ALL_TIME_SLOTS = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30"];
 
 const PARTNER_OFFERS = [
   { id:1, emoji:"🍽", name:"Restaurant El Bahia",  category:"Restaurant · Oran Centre",        promoTag:"-15%",          offerTitle:"Réduction de 15% ce weekend sur tous les menus",          offerSub:"Offre valable sam & dim · 50 places restantes", bgColor:"#1A1A2E", bgColor2:"#0F3460" },
@@ -145,18 +147,16 @@ function PartnerBanner({ isAr, onBook }) {
 
 function getTodayLabel(isAr) {
   const now = new Date();
-  const daysFR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
-  const daysAR = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
   const moisFR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
   const moisAR = ["يناير","فبراير","مارس","أبريل","ماي","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-  if (isAr) return `${daysAR[now.getDay()]} ${now.getDate()} ${moisAR[now.getMonth()]} ${now.getFullYear()}`;
-  return `${daysFR[now.getDay()]} ${now.getDate()} ${moisFR[now.getMonth()]} ${now.getFullYear()}`;
+  if (isAr) return `${DAYS_FULL_AR[now.getDay()]} ${now.getDate()} ${moisAR[now.getMonth()]} ${now.getFullYear()}`;
+  return `${DAYS_FULL_FR[now.getDay()]} ${now.getDate()} ${moisFR[now.getMonth()]} ${now.getFullYear()}`;
 }
 
 function getDates(isAr) {
   return Array.from({ length:7 }, (_,i) => {
     const d = new Date(); d.setDate(d.getDate()+i);
-    return { label:(isAr?DAYS_AR:DAYS_FR)[d.getDay()], num:d.getDate(), full:d.toLocaleDateString("fr-DZ") };
+    return { label:(isAr?DAYS_AR:DAYS_FR)[d.getDay()], num:d.getDate(), full:d.toLocaleDateString("fr-DZ"), dayOfWeek:d.getDay() };
   });
 }
 
@@ -209,6 +209,9 @@ const Loader = () => (
   </div>
 );
 
+// ─────────────────────────────────────────────
+// SPLASH
+// ─────────────────────────────────────────────
 function SplashScreen({ onGo }) {
   return (
     <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.blue},${C.blueDeep})`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:40, position:"relative", overflow:"hidden" }}>
@@ -232,6 +235,9 @@ function SplashScreen({ onGo }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────────
 function AuthScreen({ mode, onAuth, onSwitch }) {
   const params = new URLSearchParams(window.location.search);
   const initRole = params.get("role") === "pro" ? "professionnel" : "client";
@@ -263,7 +269,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const data = await res.json();
       if (data.success) { setOtpStep(true); }
       else setError("Erreur envoi SMS : " + (data.error || ""));
-    } catch(e) { setError("Serveur OTP inaccessible. Vérifiez que node index.js tourne."); }
+    } catch(e) { setError("Serveur OTP inaccessible."); }
     setLoading(false);
   };
 
@@ -283,10 +289,11 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       } else {
         const { data, error: err } = await supabase.from("users").insert({ name:form.name, phone:form.phone, role:form.role }).select().single();
         if (err) { setError("Numéro déjà utilisé ou erreur."); setLoading(false); return; }
+        // ✅ Bug fix : on utilise data.id et non form.id
         if (form.role === "professionnel") {
           const cat = getCat(form.category_id);
           await supabase.from("professionals").insert({
-            user_id:form.id, name:form.name, phone:form.phone, city:form.city,
+            user_id:data.id, name:form.name, phone:form.phone, city:form.city,
             category_id:form.category_id, speciality:cat.label || "",
             active:true, rating:5.0, reviews_count:0, plan:"starter",
             next_available:"Disponible", price:"Sur devis",
@@ -385,6 +392,9 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// HOME
+// ─────────────────────────────────────────────
 function HomeScreen({ user, isAr, lang, setLang, onBook }) {
   const [search, setSearch] = useState("");
   const [selCat, setSelCat] = useState(null);
@@ -545,13 +555,42 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// BOOKING — créneaux réels depuis Supabase
+// ─────────────────────────────────────────────
 function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
   const dates = getDates(isAr);
   const cat = getCat(pro.category_id);
+
+  // Charger les créneaux disponibles quand on sélectionne une date
+  useEffect(() => {
+    if (!date || !pro.id) return;
+    const fetchSlots = async () => {
+      setLoadingSlots(true);
+      setTime(null);
+      const { data, error } = await supabase
+        .from("availability")
+        .select("slot_time")
+        .eq("professional_id", pro.id)
+        .eq("day_of_week", date.dayOfWeek)
+        .eq("is_available", true)
+        .order("slot_time");
+      if (data && data.length > 0) {
+        setAvailableSlots(data.map(s => s.slot_time.slice(0,5)));
+      } else {
+        // Si aucun créneau défini par le pro → fallback sur les slots par défaut
+        setAvailableSlots(ALL_TIME_SLOTS);
+      }
+      setLoadingSlots(false);
+    };
+    fetchSlots();
+  }, [date, pro.id]);
 
   const confirm = async () => {
     if (!date || !time) return;
@@ -596,22 +635,35 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
             ))}
           </div>
         </Card>
+
         {date && (
           <Card>
-            <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>🕐 {isAr ? "اختر الوقت" : "Choisir l'heure"}</div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
-              {TIME_SLOTS.map((slot,i) => {
-                const avail = i%3 !== 2;
-                const active = time === slot;
-                return (
-                  <div key={slot} onClick={() => avail && setTime(slot)} style={{ padding:"10px 4px", borderRadius:12, textAlign:"center", fontSize:13, fontWeight:700, cursor:avail?"pointer":"default", background:active?C.blue:avail?C.white:"#F5F7FF", color:active?C.white:avail?C.dark:C.muted, border:`2px solid ${active?C.blue:avail?C.border:"transparent"}`, opacity:avail?1:.5 }}>
-                    {slot}
-                  </div>
-                );
-              })}
+            <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>
+              🕐 {isAr ? "اختر الوقت" : "Choisir l'heure"}
+              {loadingSlots && <span style={{ fontSize:12, color:C.muted, marginLeft:8 }}>Chargement...</span>}
             </div>
+            {loadingSlots ? (
+              <div style={{ textAlign:"center", padding:20, color:C.muted, fontSize:13 }}>⏳</div>
+            ) : availableSlots.length === 0 ? (
+              <div style={{ textAlign:"center", padding:20 }}>
+                <div style={{ fontSize:32 }}>😔</div>
+                <div style={{ fontSize:13, color:C.muted, marginTop:8 }}>{isAr ? "لا توجد أوقات متاحة هذا اليوم" : "Aucun créneau disponible ce jour"}</div>
+              </div>
+            ) : (
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+                {availableSlots.map((slot) => {
+                  const active = time === slot;
+                  return (
+                    <div key={slot} onClick={() => setTime(slot)} style={{ padding:"10px 4px", borderRadius:12, textAlign:"center", fontSize:13, fontWeight:700, cursor:"pointer", background:active?C.blue:C.white, color:active?C.white:C.dark, border:`2px solid ${active?C.blue:C.border}` }}>
+                      {slot}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </Card>
         )}
+
         {date && time && (
           <>
             <Card>
@@ -643,6 +695,9 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// SUCCESS
+// ─────────────────────────────────────────────
 function SuccessScreen({ booking, isAr, onHome }) {
   const cat = getCat(booking.pro.category_id);
   return (
@@ -672,6 +727,9 @@ function SuccessScreen({ booking, isAr, onHome }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// MES RDV (client)
+// ─────────────────────────────────────────────
 function MyBookingsScreen({ user, isAr }) {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -720,6 +778,125 @@ function MyBookingsScreen({ user, isAr }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// GESTION CRÉNEAUX PRO
+// ─────────────────────────────────────────────
+function SlotsManager({ proInfo, isAr }) {
+  const [selectedDay, setSelectedDay] = useState(1); // 0=Dim ... 6=Sam
+  const [slots, setSlots] = useState({}); // { "09:00": true/false, ... }
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  // Charger les créneaux du jour sélectionné
+  useEffect(() => {
+    if (!proInfo) return;
+    const fetchSlots = async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from("availability")
+        .select("slot_time, is_available")
+        .eq("professional_id", proInfo.id)
+        .eq("day_of_week", selectedDay);
+
+      const map = {};
+      // Initialiser tous les créneaux à false (fermé)
+      ALL_TIME_SLOTS.forEach(s => { map[s] = false; });
+      if (data && data.length > 0) {
+        data.forEach(row => {
+          const t = row.slot_time.slice(0,5);
+          map[t] = row.is_available;
+        });
+      }
+      setSlots(map);
+      setLoading(false);
+    };
+    fetchSlots();
+  }, [selectedDay, proInfo]);
+
+  const toggleSlot = (slot) => {
+    setSlots(prev => ({ ...prev, [slot]: !prev[slot] }));
+  };
+
+  const saveSlots = async () => {
+    if (!proInfo) return;
+    setSaving(true);
+    // Upsert tous les créneaux du jour
+    const rows = ALL_TIME_SLOTS.map(slot => ({
+      professional_id: proInfo.id,
+      day_of_week: selectedDay,
+      slot_time: slot + ":00",
+      is_available: slots[slot] || false,
+    }));
+    // Supprimer les anciens puis réinsérer
+    await supabase.from("availability").delete().eq("professional_id", proInfo.id).eq("day_of_week", selectedDay);
+    await supabase.from("availability").insert(rows);
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const openAll  = () => { const m = {}; ALL_TIME_SLOTS.forEach(s => m[s] = true);  setSlots(m); };
+  const closeAll = () => { const m = {}; ALL_TIME_SLOTS.forEach(s => m[s] = false); setSlots(m); };
+  const openCount = Object.values(slots).filter(Boolean).length;
+
+  const dayNames = isAr ? DAYS_FULL_AR : DAYS_FULL_FR;
+
+  return (
+    <div>
+      <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>
+        🗓 {isAr ? "إدارة الأوقات المتاحة" : "Gérer mes créneaux"}
+      </div>
+
+      {/* Sélecteur de jour */}
+      <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:14 }}>
+        {[1,2,3,4,5,6,0].map(day => (
+          <button key={day} onClick={() => setSelectedDay(day)}
+            style={{ minWidth:56, padding:"10px 6px", borderRadius:14, border:`2px solid ${selectedDay===day?C.blue:C.border}`, background:selectedDay===day?C.blue:C.white, color:selectedDay===day?C.white:C.dark, fontWeight:700, fontSize:12, cursor:"pointer", fontFamily:"inherit", textAlign:"center", flexShrink:0 }}>
+            <div>{(isAr?DAYS_AR:DAYS_FR)[day]}</div>
+          </button>
+        ))}
+      </div>
+
+      <Card style={{ padding:"14px 16px" }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+          <div>
+            <div style={{ fontSize:14, fontWeight:800, color:C.dark }}>{dayNames[selectedDay]}</div>
+            <div style={{ fontSize:12, color:C.muted }}>{openCount} {isAr?"وقت متاح":"créneaux ouverts"}</div>
+          </div>
+          <div style={{ display:"flex", gap:8 }}>
+            <button onClick={openAll}  style={{ background:C.successBg, color:C.success,  border:"none", borderRadius:10, padding:"6px 12px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>{isAr?"فتح الكل":"Tout ouvrir"}</button>
+            <button onClick={closeAll} style={{ background:"#FEE2E2",   color:"#B91C1C",  border:"none", borderRadius:10, padding:"6px 12px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>{isAr?"إغلاق الكل":"Tout fermer"}</button>
+          </div>
+        </div>
+
+        {loading ? <Loader /> : (
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+            {ALL_TIME_SLOTS.map(slot => {
+              const isOpen = slots[slot] || false;
+              return (
+                <div key={slot} onClick={() => toggleSlot(slot)}
+                  style={{ padding:"10px 4px", borderRadius:12, textAlign:"center", fontSize:13, fontWeight:700, cursor:"pointer", background:isOpen?C.successBg:C.white, color:isOpen?C.success:C.muted, border:`2px solid ${isOpen?C.success:C.border}`, transition:"all .15s" }}>
+                  {slot}
+                  <div style={{ fontSize:9, marginTop:2 }}>{isOpen?(isAr?"متاح":"ouvert"):(isAr?"مغلق":"fermé")}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <button onClick={saveSlots} disabled={saving}
+          style={{ marginTop:16, width:"100%", background:`linear-gradient(135deg,${C.blue},${C.blueDark})`, color:C.white, border:"none", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, cursor:"pointer", fontFamily:"inherit", opacity:saving?0.7:1 }}>
+          {saved ? (isAr?"✅ تم الحفظ":"✅ Sauvegardé !") : saving ? (isAr?"جاري الحفظ...":"Sauvegarde...") : (isAr?"حفظ التغييرات":"Sauvegarder")}
+        </button>
+      </Card>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// DASHBOARD PRO
+// ─────────────────────────────────────────────
 function ProDashboard({ user, isAr }) {
   const [activeTab, setActiveTab] = useState("stats");
   const [rdvs, setRdvs] = useState([]);
@@ -740,8 +917,8 @@ function ProDashboard({ user, isAr }) {
       }
       setLoading(false);
     };
-    fetchData(); // eslint-disable-line react-hooks/exhaustive-deps
-  }, [user.id]); // eslint-disable-line react-hooks/exhaustive-deps
+    fetchData();
+  }, [user.id]);
 
   const saveProfile = async () => {
     if (!proInfo) return;
@@ -768,14 +945,14 @@ function ProDashboard({ user, isAr }) {
   });
   const clients = Object.values(clientsMap);
 
-  const currentPlan = PLANS.find(p => p.id === proInfo?.plan) || PLANS[1];
+  const currentPlan = PLANS.find(p => p.id === proInfo?.plan) || PLANS[0];
   const rdvUsed = rdvs.filter(r => {
     const d = new Date(r.created_at || Date.now());
     const now = new Date();
     return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
   }).length;
 
-  const tabStyle = (t) => ({ flex:1, padding:"10px 6px", textAlign:"center", fontSize:12, fontWeight:activeTab===t?800:500, color:activeTab===t?C.blue:C.muted, borderBottom:`2px solid ${activeTab===t?C.blue:"transparent"}`, cursor:"pointer", background:"transparent", border:"none", borderBottomWidth:2, borderBottomStyle:"solid", borderBottomColor:activeTab===t?C.blue:"transparent", fontFamily:"inherit" });
+  const tabStyle = (t) => ({ flex:1, padding:"10px 4px", textAlign:"center", fontSize:11, fontWeight:activeTab===t?800:500, color:activeTab===t?C.blue:C.muted, borderBottom:`2px solid ${activeTab===t?C.blue:"transparent"}`, cursor:"pointer", background:"transparent", border:"none", borderBottomWidth:2, borderBottomStyle:"solid", borderBottomColor:activeTab===t?C.blue:"transparent", fontFamily:"inherit" });
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"12px 14px", fontSize:13, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text, marginTop:4 };
 
   return (
@@ -809,14 +986,22 @@ function ProDashboard({ user, isAr }) {
         <div style={{ position:"absolute", bottom:-2, left:0, right:0, height:30, background:C.bg, borderRadius:"50% 50% 0 0 / 20px 20px 0 0" }} />
       </div>
 
+      {/* Tabs — 5 onglets dont Créneaux */}
       <div style={{ display:"flex", background:C.white, borderBottom:`1px solid ${C.border}`, position:"sticky", top:0, zIndex:10 }}>
-        {[["stats","📊",isAr?"إحصائيات":"Stats"],["agenda","📅",isAr?"أجندة":"Agenda"],["clients","👥",isAr?"عملاء":"Clients"],["settings","⚙️",isAr?"إعدادات":"Params"]].map(([t,ic,lb]) => (
-          <button key={t} onClick={() => setActiveTab(t)} style={tabStyle(t)}>{ic} {lb}</button>
+        {[
+          ["stats",    "📊", isAr?"إحصائيات":"Stats"],
+          ["agenda",   "📅", isAr?"أجندة":"Agenda"],
+          ["slots",    "🗓", isAr?"أوقات":"Créneaux"],
+          ["clients",  "👥", isAr?"عملاء":"Clients"],
+          ["settings", "⚙️", isAr?"إعدادات":"Params"],
+        ].map(([t,ic,lb]) => (
+          <button key={t} onClick={() => setActiveTab(t)} style={tabStyle(t)}>{ic}<br/><span style={{ fontSize:9 }}>{lb}</span></button>
         ))}
       </div>
 
       <div style={{ padding:"16px 20px" }}>
 
+        {/* ── STATS ── */}
         {activeTab === "stats" && (
           <>
             <Card style={{ padding:"14px 16px" }}>
@@ -876,6 +1061,7 @@ function ProDashboard({ user, isAr }) {
           </>
         )}
 
+        {/* ── AGENDA ── */}
         {activeTab === "agenda" && (
           <>
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>
@@ -915,6 +1101,12 @@ function ProDashboard({ user, isAr }) {
           </>
         )}
 
+        {/* ── CRÉNEAUX ── */}
+        {activeTab === "slots" && (
+          loading ? <Loader /> : <SlotsManager proInfo={proInfo} isAr={isAr} />
+        )}
+
+        {/* ── CLIENTS ── */}
         {activeTab === "clients" && (
           <>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
@@ -949,6 +1141,7 @@ function ProDashboard({ user, isAr }) {
           </>
         )}
 
+        {/* ── SETTINGS ── */}
         {activeTab === "settings" && (
           <>
             <div style={{ fontSize:15, fontWeight:800, color:C.dark, marginBottom:14 }}>⚙️ {isAr ? "الملف المهني" : "Profil professionnel"}</div>
@@ -995,6 +1188,9 @@ function ProDashboard({ user, isAr }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// PROFIL
+// ─────────────────────────────────────────────
 function ProfileScreen({ user, isAr, onLogout }) {
   const items = [
     ["👤", isAr?"المعلومات الشخصية":"Informations personnelles"],
@@ -1034,6 +1230,9 @@ function ProfileScreen({ user, isAr, onLogout }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// APP ROOT
+// ─────────────────────────────────────────────
 export default function App() {
   const params    = new URLSearchParams(window.location.search);
   const isProUrl  = params.get("role") === "pro";
