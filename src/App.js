@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = "https://dkpirfevdhvgxrkdqojn.supabase.co";
-const SUPABASE_KEY = "sb_publishable_rtt-dfO0qA5DQVsqe86hAQ_zM529u_K";
+// Clé publique Supabase (anon key) — destinée à être exposée côté client avec RLS activé
+const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || "https://dkpirfevdhvgxrkdqojn.supabase.co";
+const SUPABASE_KEY = process.env.REACT_APP_SUPABASE_KEY || "sb_publishable_rtt-dfO0qA5DQVsqe86hAQ_zM529u_K";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// URL du serveur OTP — configurable via variable d'environnement
+const SERVER = process.env.REACT_APP_SERVER_URL || "https://blasty-production.up.railway.app";
 
 const C = {
   blue: "#1A6EFF", blueDark: "#0048CC", blueDeep: "#003099", blueLight: "#4D95FF",
@@ -249,7 +253,6 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [otpCode, setOtpCode] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const isLogin = mode === "login";
-  const SERVER = "https://blasty-production.up.railway.app";
   const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
   const formatPhone = (p) => {
@@ -498,6 +501,7 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
   const [showCats, setShowCats] = useState(false);
   const [pros, setPros] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [comingSoon, setComingSoon] = useState("");
 
   useEffect(() => {
     const fetchPros = async () => {
@@ -550,7 +554,13 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
         ))}
       </div>
 
-      <PartnerBanner isAr={isAr} onBook={(o) => alert("Bientôt : " + o.name)} />
+      <PartnerBanner isAr={isAr} onBook={(o) => setComingSoon(isAr ? `قريباً: ${o.name}` : `Bientôt disponible : ${o.name}`)} />
+      {comingSoon && (
+        <div style={{ margin:"0 20px 4px", background:C.warnBg, color:C.warn, borderRadius:12, padding:"10px 14px", fontSize:13, fontWeight:600, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <span>{"🚧"} {comingSoon}</span>
+          <span onClick={() => setComingSoon("")} style={{ cursor:"pointer", fontSize:16, marginLeft:8 }}>{"✕"}</span>
+        </div>
+      )}
 
       <div style={{ padding:"0 20px 0" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
@@ -739,6 +749,7 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
   const [time, setTime] = useState(null);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const [bookingError, setBookingError] = useState("");
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const dates = getDates(isAr);
@@ -778,8 +789,9 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
         date:date.full, time, note, price:pro.price, status:"confirmed",
       }).select().single();
       if (error) throw error;
+      setBookingError("");
       onConfirm({ pro, date, time, note, id:data.id });
-    } catch(e) { alert("Erreur lors de la réservation."); }
+    } catch(e) { setBookingError(isAr ? "حدث خطأ أثناء الحجز. حاول مجدداً." : "Erreur lors de la réservation. Veuillez réessayer."); }
     setLoading(false);
   };
 
@@ -860,6 +872,11 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
                   <span style={{ fontWeight:700, color:C.dark }}>{v}</span>
                 </div>
               ))}
+              {bookingError && (
+                <div style={{ background:"#FEE2E2", color:"#B91C1C", borderRadius:12, padding:"10px 14px", fontSize:13, marginBottom:8 }}>
+                  {"⚠️"} {bookingError}
+                </div>
+              )}
               <PrimaryBtn onClick={confirm} disabled={loading} style={{ marginTop:8 }}>
                 {loading ? (isAr?"جاري التأكيد...":"Confirmation...") : (isAr?"تأكيد الحجز":"Confirmer le RDV")}
               </PrimaryBtn>
@@ -1081,20 +1098,24 @@ function ProDashboard({ user, isAr }) {
   const [proForm, setProForm] = useState({ name:"", speciality:"", phone:"", address:"", description:"" });
   const [saved, setSaved] = useState(false);
 
+  // Extraire les valeurs stables pour les dépendances du useEffect
+  const userId = user.id;
+  const userPhone = user.phone;
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const { data:proData } = await supabase.from("professionals").select("*").eq("user_id", user.id).single();
+      const { data:proData } = await supabase.from("professionals").select("*").eq("user_id", userId).single();
       if (proData) {
         setProInfo(proData);
-        setProForm({ name:proData.name||"", speciality:proData.speciality||"", phone:proData.phone||user.phone||"", address:proData.address||"", description:proData.description||"" });
+        setProForm({ name:proData.name||"", speciality:proData.speciality||"", phone:proData.phone||userPhone||"", address:proData.address||"", description:proData.description||"" });
         const { data:rdvData } = await supabase.from("reservations").select("*").eq("professional_id", proData.id).order("created_at", { ascending:false });
         if (rdvData) setRdvs(rdvData);
       }
       setLoading(false);
     };
     fetchData();
-  }, [user.id, user.phone]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId, userPhone]);
 
   const saveProfile = async () => {
     if (!proInfo) return;
