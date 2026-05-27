@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 const SUPABASE_URL = "https://dkpirfevdhvgxrkdqojn.supabase.co";
 const SUPABASE_KEY = "sb_publishable_rtt-dfO0qA5DQVsqe86hAQ_zM529u_K";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const SERVER   = "https://blasty-production.up.railway.app";
 
 const C = {
   blue: "#1A6EFF", blueDark: "#0048CC", blueDeep: "#003099", blueLight: "#4D95FF",
@@ -249,8 +250,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
   const [otpCode, setOtpCode] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const isLogin = mode === "login";
-  const SERVER = "https://blasty-production.up.railway.app";
-  const inp = { border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
+  const inp ={ border:`1.5px solid ${C.border}`, borderRadius:14, padding:"14px 16px", fontSize:14, outline:"none", fontFamily:"inherit", background:C.white, width:"100%", boxSizing:"border-box", color:C.text };
 
   const formatPhone = (p) => {
     const clean = p.replace(/\s/g, "");
@@ -275,7 +275,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
         .from("users").select("*").eq("phone", form.phone).eq("password", form.password).single();
       if (err || !data) { setError("Numéro ou mot de passe incorrect."); setLoading(false); return; }
       onAuth(data);
-    } catch(e) { setError("Erreur de connexion."); }
+    } catch (e) { console.error(e); setError("Erreur de connexion."); }
     setLoading(false);
   };
 
@@ -292,7 +292,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const data = await sendOtp(phone);
       if (data.success) { setOtpMode("register_verify"); }
       else setError("Erreur envoi SMS : " + (data.error || ""));
-    } catch(e) { setError("Serveur OTP inaccessible."); }
+    } catch (e) { console.error(e); setError("Serveur OTP inaccessible."); }
     setLoading(false);
   };
 
@@ -318,7 +318,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
         });
       }
       onAuth(data);
-    } catch(e) { setError("Erreur de connexion."); }
+    } catch (e) { console.error(e); setError("Erreur de connexion."); }
     setLoading(false);
   };
 
@@ -332,7 +332,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const data = await sendOtp(phone);
       if (data.success) { setOtpMode("forgot"); }
       else setError("Erreur envoi SMS : " + (data.error || ""));
-    } catch(e) { setError("Serveur OTP inaccessible."); }
+    } catch (e) { console.error(e); setError("Serveur OTP inaccessible."); }
     setLoading(false);
   };
 
@@ -350,7 +350,7 @@ function AuthScreen({ mode, onAuth, onSwitch }) {
       const { data, error: err } = await supabase.from("users").update({ password:form.password }).eq("phone", form.phone).select().single();
       if (err || !data) { setError("Numéro introuvable."); setLoading(false); return; }
       onAuth(data);
-    } catch(e) { setError("Erreur."); }
+    } catch (e) { console.error(e); setError("Erreur."); }
     setLoading(false);
   };
 
@@ -550,7 +550,7 @@ function HomeScreen({ user, isAr, lang, setLang, onBook }) {
         ))}
       </div>
 
-      <PartnerBanner isAr={isAr} onBook={(o) => alert("Bientôt : " + o.name)} />
+      <PartnerBanner isAr={isAr} onBook={() => {}} />
 
       <div style={{ padding:"0 20px 0" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
@@ -741,6 +741,7 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
   const [loading, setLoading] = useState(false);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [bookingError, setBookingError] = useState("");
   const dates = getDates(isAr);
   const cat = getCat(pro.category_id);
 
@@ -779,7 +780,7 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
       }).select().single();
       if (error) throw error;
       onConfirm({ pro, date, time, note, id:data.id });
-    } catch(e) { alert("Erreur lors de la réservation."); }
+    } catch (e) { console.error(e); setBookingError(isAr ? "خطأ أثناء الحجز." : "Erreur lors de la réservation."); }
     setLoading(false);
   };
 
@@ -860,6 +861,7 @@ function BookingScreen({ pro, user, isAr, onBack, onConfirm }) {
                   <span style={{ fontWeight:700, color:C.dark }}>{v}</span>
                 </div>
               ))}
+              {bookingError && <div style={{ background:"#FEE2E2", color:"#B91C1C", borderRadius:12, padding:"10px 14px", fontSize:13, marginBottom:12 }}>{bookingError}</div>}
               <PrimaryBtn onClick={confirm} disabled={loading} style={{ marginTop:8 }}>
                 {loading ? (isAr?"جاري التأكيد...":"Confirmation...") : (isAr?"تأكيد الحجز":"Confirmer le RDV")}
               </PrimaryBtn>
